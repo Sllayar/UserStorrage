@@ -52,13 +52,16 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+app.UseRouting();
 
-//app.UseHttpsRedirection();
-
-//app.UseAuthorization();
-
-app.MapControllers();
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllers();
+    endpoints.MapGet("/", context =>
+    {
+        return Task.Run(() => context.Response.Redirect("graphql/"));
+    });
+});
 
 app.MapGraphQL();
-
 app.Run();
