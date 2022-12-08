@@ -6,7 +6,7 @@ namespace UserStorrage6.Model.Short
 {
     public class UserShort
     {
-        public Status IsActive { get; set; }
+        public Status Status { get; set; }
 
         public string? SysLogin { get; set; }
 

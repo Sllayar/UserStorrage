@@ -16,7 +16,7 @@ namespace UserStorrage6.Model.DB
         public int Id { get; set; }
 
         [Required]
-        public Status IsActive { get; set; }
+        public Status Status { get; set; }
 
         [Required]
         [Key]
