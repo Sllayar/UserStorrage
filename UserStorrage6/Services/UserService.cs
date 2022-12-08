@@ -41,26 +41,43 @@ namespace UserStorrage6.Services
                 else UpdateUser(currentUser, user, currentdate);
             }
 
-            DeleteNotUpdatedUsers(currentService, currentdate);
+            var exceptUsers = currentService.Users
+                .Select(s => s.SysLogin)
+                .Except(service.Users.Select(s => s.SysLogin)).ToList();
+
+            DeleteNotUpdatedUsers(currentService, exceptUsers, currentdate);
 
             await _applicationDbContext.SaveChangesAsync();
 
             return currentService;
         }
 
-        private void DeleteNotUpdatedUsers(Service currentService, DateTime currentdate)
+        private void DeleteNotUpdatedUsers(Service currentService,
+            List<string> exceptUsers, DateTime currentdate)
         {
-            if (currentService == null || currentService.Users == null) return;
+            if (currentService == null || currentService.Users == null ||
+                exceptUsers == null || exceptUsers.Count == 0) return;
 
             foreach (var eu in exceptUsers)
             {
-                if (user.UpdateAt != currentdate)
-                    user.IsActive = Status.Delete;
+                var curUser = currentService.Users.FirstOrDefault(u => u.SysLogin == eu);
+
+                if (curUser == null) continue;
+
+                curUser.IsActive = Status.Delete;
+                curUser.UpdateAt = currentdate;
             }
         }
 
         private void UpdateUser(User currentUser, UserShort user, DateTime currentdate)
         {
+            if (currentUser.Comment == user.Comment &&
+                currentUser.DomainLogin == user.DomainLogin &&
+                currentUser.IsActive == user.IsActive &&
+                currentUser.SysLogin == user.SysLogin &&
+                currentUser.Type == user.Type )
+                return;
+
             currentUser.Comment = user.Comment;
             currentUser.DomainLogin = user.DomainLogin;
             currentUser.IsActive = user.IsActive;
