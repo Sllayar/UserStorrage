@@ -1,0 +1,58 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-api-deploy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: user-api
+  template:
+    metadata:
+      labels:
+        app: user-api
+    spec:
+      containers:
+      - image: nexus-rls.rncb.ru/user-storage-api:1.0
+        name: user-api
+        env:
+            - name: USER_DB
+              value: "Host=postgres;Port=5432;Database=user_db;Username=admin;Password=psltest"
+            - name: TZ
+              value: "Europe/Moscow"
+...
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: user-api-svc
+spec:
+  selector:
+    app: user-api
+  ports:
+  - protocol: TCP
+    port: 80
+  type: ClusterIP
+...
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: user-api-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: 50m
+spec:
+  ingressClassName: nginx 
+  rules:
+  - host: user-api.rbus-dev.rncb.ru
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: user-api-svc
+            port:
+              number: 80
+
