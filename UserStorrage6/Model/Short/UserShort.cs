@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using UserStorrage6.Model.DB;
 
 namespace UserStorrage6.Model.Short
@@ -13,8 +14,13 @@ namespace UserStorrage6.Model.Short
 
         public DB.Type Type { get; set; }
 
-        public string? ServiceKey { get; set; }
+        [Required]
+        public string ServiceKey { get; set; }
 
         public string? Comment { get; set; }
+
+        public string[]? Roles { get; set; }
+
+        public string[]? Permissions { get; set; }
     }
 }

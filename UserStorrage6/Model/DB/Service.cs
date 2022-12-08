@@ -27,9 +27,4 @@ namespace UserStorrage6.Model.DB
 
         public virtual List<User>? Users { get; set; }
     }
-
-    //public class ServiceFull : Service
-    //{
-    //    public virtual List<User>? Users { get; set; }
-    //}
 }

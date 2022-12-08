@@ -19,12 +19,14 @@ namespace UserStorrage6.Model.DB
         public Status IsActive { get; set; }
 
         [Required]
+        [Key]
         public string? SysLogin { get; set; }
 
         public string? DomainLogin { get; set; }
 
         [JsonIgnore]
         [Required]
+        [Key]
         public virtual Service? Service { get; set; }
 
         [Required]

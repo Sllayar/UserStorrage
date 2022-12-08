@@ -13,6 +13,7 @@ namespace UserStorrage6.Model.DB
         public int Id { get; set; }
 
         [Required]
+        [Key]
         public string? Name { get; set; }
 
         [Required]
@@ -25,6 +26,7 @@ namespace UserStorrage6.Model.DB
         public bool? IsNeedAprove { get; set; }
 
         [Required]
+        [Key]
         public virtual Service? Service { get; set; }
 
         public string? Comment { get; set; }
@@ -32,6 +34,8 @@ namespace UserStorrage6.Model.DB
         public DateTime CreateAT { get; set; } = DateTime.UtcNow;
 
         public DateTime UpdateAt { get; set; } = DateTime.UtcNow;
+
+        public virtual List<User>? Users { get; set; }
     }
 
     public class PermissionRequest
