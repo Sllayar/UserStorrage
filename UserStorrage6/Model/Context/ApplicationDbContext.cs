@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using HotChocolate.Language;
+
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
 using System;
@@ -33,6 +35,18 @@ namespace UsersStorrage.Models.Context
 
             Database.EnsureCreated();
         }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<User>()
+                .HasMany(c => c.Roles)
+                .WithMany(s => s.Users);
+
+            modelBuilder.Entity<User>()
+                .HasMany(c => c.Permissions)
+                .WithMany(s => s.Users);
+        }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseNpgsql(_connectionString);
