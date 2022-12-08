@@ -26,7 +26,16 @@ namespace UserStorrage6.GraphQl.Mutation
 
             var service = applicationDbContext.Services.FirstOrDefault(s => s.Key == user.ServiceKey);
             if (service == null) throw new ArgumentException("Сервис с таким ключом не найден.");
+
+            var roles = applicationDbContext.Roles.Where(
+                s => user.Roles.Contains(s.Name) && s.Service.Key.Equals(user.ServiceKey)).ToList();
+
+            var permissions = applicationDbContext.Permissions.Where(
+                s => user.Permissions.Contains(s.Name) && s.Service.Key.Equals(user.ServiceKey)).ToList();
+
+            newUser.Roles = roles;
             newUser.Service = service;
+            newUser.Permissions = permissions;
 
             var res = await applicationDbContext.AddAsync(newUser);
             await applicationDbContext.SaveChangesAsync();
