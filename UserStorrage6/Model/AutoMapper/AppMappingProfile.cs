@@ -9,8 +9,14 @@ namespace UserStorrage6.Model.AutoMapper
     {
         public AppMappingProfile()
         {
-            CreateMap<UserShort, User>().ForMember(x => x.Service, opt => opt.Ignore());
-            CreateMap<User, UserShort>().ForMember(x => x.ServiceKey, opt => opt.Ignore());
+            CreateMap<UserShort, User>()
+                .ForMember(x => x.Service, opt => opt.Ignore())
+                .ForMember(x => x.Permissions, opt => opt.Ignore())
+                .ForMember(x => x.Roles, opt => opt.Ignore());
+            CreateMap<User, UserShort>()
+                .ForMember(x => x.ServiceKey, opt => opt.Ignore())
+                .ForMember(x => x.Permissions, opt => opt.Ignore())
+                .ForMember(x => x.Roles, opt => opt.Ignore());
 
             CreateMap<Role, RoleRequest>().ForMember(x => x.ServiceKey, opt => opt.Ignore());
             CreateMap<RoleRequest, Role>().ForMember(x => x.Service, opt => opt.Ignore());
