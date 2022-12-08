@@ -10,7 +10,7 @@ namespace UserStorrage6.Model.Short
 
         public string? SysLogin { get; set; }
 
-        public string? DomainLogin { get; set; }
+        public string? OwnerLogin { get; set; }
 
         public DB.Type Type { get; set; }
 

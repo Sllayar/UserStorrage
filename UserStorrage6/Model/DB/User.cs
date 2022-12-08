@@ -22,7 +22,7 @@ namespace UserStorrage6.Model.DB
         [Key]
         public string? SysLogin { get; set; }
 
-        public string? DomainLogin { get; set; }
+        public string? OwnerLogin { get; set; }
 
         [JsonIgnore]
         [Required]

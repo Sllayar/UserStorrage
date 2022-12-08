@@ -72,14 +72,14 @@ namespace UserStorrage6.Services
         private void UpdateUser(User currentUser, UserShort user, DateTime currentdate)
         {
             if (currentUser.Comment == user.Comment &&
-                currentUser.DomainLogin == user.DomainLogin &&
+                currentUser.OwnerLogin == user.OwnerLogin &&
                 currentUser.Status == user.Status &&
                 currentUser.SysLogin == user.SysLogin &&
                 currentUser.Type == user.Type )
                 return;
 
             currentUser.Comment = user.Comment;
-            currentUser.DomainLogin = user.DomainLogin;
+            currentUser.OwnerLogin = user.OwnerLogin;
             currentUser.Status = user.Status;
             currentUser.SysLogin = user.SysLogin;
             currentUser.Type = user.Type;

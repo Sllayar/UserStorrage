@@ -41,7 +41,7 @@ namespace TestUserStorrage.Repo
                 {
                     Id= 1,
                     SysLogin = "SokolES1",
-                    DomainLogin = "SokolES1",
+                    OwnerLogin = "SokolES1",
                     Service = service1,
                     Type = UserStorrage6.Model.DB.Type.System,
                     Status = Status.Enable,
@@ -52,7 +52,7 @@ namespace TestUserStorrage.Repo
                 {
                     Id= 2,
                     SysLogin = "SokolES2",
-                    DomainLogin = "SokolES2",
+                    OwnerLogin = "SokolES2",
                     Service = service1,
                     Type = UserStorrage6.Model.DB.Type.System,
                     Status = Status.Enable,
@@ -63,7 +63,7 @@ namespace TestUserStorrage.Repo
                 {
                     Id= 3,
                     SysLogin = "SokolES3",
-                    DomainLogin = "SokolES3",
+                    OwnerLogin = "SokolES3",
                     Service = service1,
                     Type = UserStorrage6.Model.DB.Type.System,
                     Status = Status.Enable,
@@ -74,7 +74,7 @@ namespace TestUserStorrage.Repo
                 {
                     Id= 4,
                     SysLogin = "SokolES4",
-                    DomainLogin = "SokolES4",
+                    OwnerLogin = "SokolES4",
                     Service = service2,
                     Type = UserStorrage6.Model.DB.Type.System,
                     Status = Status.Enable,
