@@ -64,7 +64,7 @@ namespace UserStorrage6.Services
 
                 if (curUser == null) continue;
 
-                curUser.IsActive = Status.Delete;
+                curUser.Status = Status.Delete;
                 curUser.UpdateAt = currentdate;
             }
         }
@@ -73,14 +73,14 @@ namespace UserStorrage6.Services
         {
             if (currentUser.Comment == user.Comment &&
                 currentUser.DomainLogin == user.DomainLogin &&
-                currentUser.IsActive == user.IsActive &&
+                currentUser.Status == user.Status &&
                 currentUser.SysLogin == user.SysLogin &&
                 currentUser.Type == user.Type )
                 return;
 
             currentUser.Comment = user.Comment;
             currentUser.DomainLogin = user.DomainLogin;
-            currentUser.IsActive = user.IsActive;
+            currentUser.Status = user.Status;
             currentUser.SysLogin = user.SysLogin;
             currentUser.Type = user.Type;
             currentUser.UpdateAt = currentdate;

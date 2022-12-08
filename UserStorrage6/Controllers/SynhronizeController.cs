@@ -103,8 +103,8 @@ namespace UserStorrage6.Controllers
 
             foreach (var user in service.Users)
             {
-                if (user?.IsActive == null)
-                    throw new ArgumentException("Отсутствет поле user.IsActive");
+                if (user?.Status == null)
+                    throw new ArgumentException("Отсутствет поле user.Status");
                 if (string.IsNullOrEmpty(user?.SysLogin))
                     throw new ArgumentException("Отсутствет поле user.SysLogin");
                 if (user?.Type == null)

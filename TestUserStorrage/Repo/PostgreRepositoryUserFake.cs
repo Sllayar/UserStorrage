@@ -44,7 +44,7 @@ namespace TestUserStorrage.Repo
                     DomainLogin = "SokolES1",
                     Service = service1,
                     Type = UserStorrage6.Model.DB.Type.System,
-                    IsActive = Status.Enable,
+                    Status = Status.Enable,
                     UpdateAt = DateTime.UtcNow,
                     CreateAT = DateTime.UtcNow
                 },
@@ -55,7 +55,7 @@ namespace TestUserStorrage.Repo
                     DomainLogin = "SokolES2",
                     Service = service1,
                     Type = UserStorrage6.Model.DB.Type.System,
-                    IsActive = Status.Enable,
+                    Status = Status.Enable,
                     UpdateAt = DateTime.UtcNow,
                     CreateAT = DateTime.UtcNow
                 },
@@ -66,7 +66,7 @@ namespace TestUserStorrage.Repo
                     DomainLogin = "SokolES3",
                     Service = service1,
                     Type = UserStorrage6.Model.DB.Type.System,
-                    IsActive = Status.Enable,
+                    Status = Status.Enable,
                     UpdateAt = DateTime.UtcNow,
                     CreateAT = DateTime.UtcNow
                 },
@@ -77,7 +77,7 @@ namespace TestUserStorrage.Repo
                     DomainLogin = "SokolES4",
                     Service = service2,
                     Type = UserStorrage6.Model.DB.Type.System,
-                    IsActive = Status.Enable,
+                    Status = Status.Enable,
                     UpdateAt = DateTime.UtcNow,
                     CreateAT = DateTime.UtcNow
                 }
