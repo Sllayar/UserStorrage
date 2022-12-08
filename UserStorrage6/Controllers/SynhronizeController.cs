@@ -14,14 +14,14 @@ namespace UserStorrage6.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class SinhronizeController : ControllerBase
+    public class SynhronizeController : ControllerBase
     {
-        private readonly ILogger<SinhronizeController> _logger;
+        private readonly ILogger<SynhronizeController> _logger;
         private readonly IUserService _userService;
         private readonly ApplicationDbContext _applicationDbContext;
 
-        public SinhronizeController(
-            ILogger<SinhronizeController> logger,
+        public SynhronizeController(
+            ILogger<SynhronizeController> logger,
             IUserService userService,
             ApplicationDbContext applicationDbContext)
         {

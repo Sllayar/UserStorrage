@@ -11,7 +11,7 @@ namespace UsersStorrage.Models.Context
 {
     public class ApplicationDbContext : DbContext
     {
-        private readonly IConfiguration _Configuration;
+        private readonly string _connectionString;
         private readonly ILoggerFactory _LoggerFactory;
 
         public DbSet<Service> Services { get; set; }
@@ -26,19 +26,16 @@ namespace UsersStorrage.Models.Context
             DbContextOptions<ApplicationDbContext> options
             ) : base(options)
         {
-            _Configuration = configuration;
+            _connectionString = configuration.GetValue<string>("USER_DB");
+            if (string.IsNullOrEmpty(_connectionString))
+                throw new Exception("Envariment USER_DB is null");
             _LoggerFactory = loggerFactory;
 
             Database.EnsureCreated();
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            var connection = _Configuration.GetConnectionString("PostgresDbConnection");
-
-            if (string.IsNullOrEmpty(connection)) 
-                connection = "Host=127.0.0.1;Port=5432;Database=UserStorrage;Username=User;Password=1234567890";
-
-            optionsBuilder.UseNpgsql(connection);
+            optionsBuilder.UseNpgsql(_connectionString);
             optionsBuilder.UseLoggerFactory(_LoggerFactory);
         }
     }

@@ -9,6 +9,7 @@ using UserStorrage6.Services;
 using UserStorrage6.Model.Context;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Host.ConfigureAppConfiguration(cb => { cb.AddEnvironmentVariables(); });
 
 // Add services to the container.
 
