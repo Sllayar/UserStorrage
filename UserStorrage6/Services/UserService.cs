@@ -52,7 +52,7 @@ namespace UserStorrage6.Services
         {
             if (currentService == null || currentService.Users == null) return;
 
-            foreach (var user in currentService.Users)
+            foreach (var eu in exceptUsers)
             {
                 if (user.UpdateAt != currentdate)
                     user.IsActive = Status.Delete;
