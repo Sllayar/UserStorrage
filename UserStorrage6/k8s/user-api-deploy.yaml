@@ -14,9 +14,11 @@ spec:
         app: user-api
     spec:
       containers:
-      - image: nexus-rls.rncb.ru/user-storage-api:1.0
+      - image: nexus-rls.rncb.ru/user-storage-api:1.3
         name: user-api
         env:
+            - name: ASPNETCORE_ENVIRONMENT
+              value: Development
             - name: USER_DB
               value: "Host=postgres;Port=5432;Database=user_db;Username=admin;Password=psltest"
             - name: TZ
