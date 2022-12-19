@@ -109,6 +109,8 @@ namespace UserStorrage6.Controllers
                     throw new ArgumentException("Отсутствет поле user.SysLogin");
                 if (user?.Type == null)
                     throw new ArgumentException("Отсутствет поле user.Type");
+                if (user?.SysId == null)
+                    throw new ArgumentException("Отсутствет поле user.SysId");
             }
         }
     }

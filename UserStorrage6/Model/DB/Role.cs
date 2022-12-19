@@ -14,6 +14,9 @@ namespace UserStorrage6.Model.DB
 
         [Required]
         [Key]
+        public string SysId { get; set; }
+
+        [Required]
         public string? Name { get; set; }
 
         [Required]
@@ -43,6 +46,8 @@ namespace UserStorrage6.Model.DB
     public class RoleRequest
     {
         [Required]
+        public string SysId { get; set; }
+
         public string? Name { get; set; }
 
         public string? Description { get; set; }

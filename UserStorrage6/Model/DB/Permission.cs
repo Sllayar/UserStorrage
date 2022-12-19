@@ -14,6 +14,9 @@ namespace UserStorrage6.Model.DB
 
         [Required]
         [Key]
+        public string SysId { get; set; }
+
+        [Required]
         public string? Name { get; set; }
 
         [Required]
@@ -23,7 +26,7 @@ namespace UserStorrage6.Model.DB
         public Status Status { get; set; }
 
         [Required]
-        public bool? IsNeedAprove { get; set; }
+        public bool IsNeedAprove { get; set; }
 
         [Required]
         [Key]
@@ -40,6 +43,9 @@ namespace UserStorrage6.Model.DB
 
     public class PermissionRequest
     {
+        [Required]
+        public string SysId { get; set; }
+
         public string? Name { get; set; }
 
         public string? Description { get; set; }
@@ -48,6 +54,7 @@ namespace UserStorrage6.Model.DB
 
         public bool? IsNeedAprove { get; set; }
 
+        [Required]
         public virtual string? ServiceKey { get; set; }
 
         public string? Comment { get; set; }

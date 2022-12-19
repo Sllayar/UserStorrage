@@ -6,9 +6,13 @@ namespace UserStorrage6.Model.Short
 {
     public class UserShort
     {
+        [Required]
+        public string SysId { get; set; }
+
         public Status Status { get; set; }
 
-        public string? SysLogin { get; set; }
+        [Required]
+        public string SysLogin { get; set; }
 
         public string? OwnerLogin { get; set; }
 

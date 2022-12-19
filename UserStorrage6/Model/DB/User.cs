@@ -16,10 +16,13 @@ namespace UserStorrage6.Model.DB
         public int Id { get; set; }
 
         [Required]
+        [Key]
+        public string SysId { get; set; }
+
+        [Required]
         public Status Status { get; set; }
 
         [Required]
-        [Key]
         public string? SysLogin { get; set; }
 
         public string? OwnerLogin { get; set; }

@@ -35,15 +35,16 @@ namespace UserStorrage6.Services
             foreach (var user in service.Users)
             {
                 var currentUser = currentService?.Users?.FirstOrDefault(u =>
-                    u.SysLogin == user.SysLogin);
+                    u.SysId == user.SysId);
 
                 if (currentUser == null) AddNewUser(currentService, user, currentdate);
                 else UpdateUser(currentUser, user, currentdate);
             }
 
             var exceptUsers = currentService.Users
-                .Select(s => s.SysLogin)
-                .Except(service.Users.Select(s => s.SysLogin)).ToList();
+                .Select(s => s.SysId)
+                .Except(service.Users.Select(s => s.SysId))
+                .ToList();
 
             DeleteNotUpdatedUsers(currentService, exceptUsers, currentdate);
 
@@ -60,7 +61,7 @@ namespace UserStorrage6.Services
 
             foreach (var eu in exceptUsers)
             {
-                var curUser = currentService.Users.FirstOrDefault(u => u.SysLogin == eu);
+                var curUser = currentService.Users.FirstOrDefault(u => u.SysId == eu);
 
                 if (curUser == null) continue;
 
