@@ -38,9 +38,14 @@ namespace UsersStorrage.Models.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //modelBuilder.Entity<User>()
-            //    .HasAlternateKey(u => new { 
-            //        u.SysId, u.Service });
+            modelBuilder.Entity<User>()
+                .HasAlternateKey("SysId", "ServiceKey");
+
+            modelBuilder.Entity<Role>()
+                .HasAlternateKey("SysId", "ServiceKey");
+
+            modelBuilder.Entity<Permission>()
+                .HasAlternateKey("SysId", "ServiceKey");
 
             modelBuilder.Entity<User>()
                 .HasMany(c => c.Roles)
