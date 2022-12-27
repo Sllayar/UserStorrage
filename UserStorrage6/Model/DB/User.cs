@@ -16,8 +16,7 @@ namespace UserStorrage6.Model.DB
         public int Id { get; set; }
 
         [Required]
-        [Key]
-        public string SysId { get; set; }
+        public string? SysId { get; set; }
 
         [Required]
         public Status Status { get; set; }
@@ -29,7 +28,6 @@ namespace UserStorrage6.Model.DB
 
         [JsonIgnore]
         [Required]
-        [Key]
         public virtual Service? Service { get; set; }
 
         [Required]
@@ -40,6 +38,8 @@ namespace UserStorrage6.Model.DB
         public DateTime CreateAT { get; set; } = DateTime.UtcNow;
 
         public DateTime UpdateAt { get; set; } = DateTime.UtcNow;
+
+        public DateTime SyncAt { get; set; } = DateTime.UtcNow;
 
         public virtual List<Role>? Roles { get; set; }
 

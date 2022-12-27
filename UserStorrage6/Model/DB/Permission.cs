@@ -13,7 +13,6 @@ namespace UserStorrage6.Model.DB
         public int Id { get; set; }
 
         [Required]
-        [Key]
         public string SysId { get; set; }
 
         [Required]
@@ -26,10 +25,9 @@ namespace UserStorrage6.Model.DB
         public Status Status { get; set; }
 
         [Required]
-        public bool IsNeedAprove { get; set; }
+        public bool? IsNeedAprove { get; set; }
 
         [Required]
-        [Key]
         public virtual Service? Service { get; set; }
 
         public string? Comment { get; set; }
@@ -54,7 +52,6 @@ namespace UserStorrage6.Model.DB
 
         public bool? IsNeedAprove { get; set; }
 
-        [Required]
         public virtual string? ServiceKey { get; set; }
 
         public string? Comment { get; set; }
