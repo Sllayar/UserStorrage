@@ -9,6 +9,7 @@ namespace UserStorrage6.Model.Short
         [Required]
         public string SysId { get; set; }
 
+        [Required]
         public Status Status { get; set; }
 
         [Required]
