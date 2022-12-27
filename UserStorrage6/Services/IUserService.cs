@@ -6,5 +6,9 @@ namespace UserStorrage6.Services
     public interface IUserService
     {
         Task<Service> Sinhronize(ServiceRequest service);
+
+        Task<Service> PartSinhronize(ServiceRequest service, DateTime currentdate);
+
+        Task<Service> DeleteNotUpdatedUsers(string serviceKey, DateTime currentdate);
     }
 }
