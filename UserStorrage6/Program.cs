@@ -13,7 +13,10 @@ builder.Host.ConfigureAppConfiguration(cb => { cb.AddEnvironmentVariables(); });
 
 // Add services to the container.
 
-builder.Services.AddControllers();
+
+builder.Services.AddControllers().AddNewtonsoftJson(o =>
+    o.SerializerSettings.MissingMemberHandling = Newtonsoft.Json.MissingMemberHandling.Error);
+
 //// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
