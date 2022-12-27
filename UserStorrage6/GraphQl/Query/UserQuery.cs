@@ -14,7 +14,7 @@ namespace UserStorrage6.GraphQl.Query
             [Service] ApplicationDbContext applicationDbContext) =>
                 applicationDbContext.Users;
 
-        [UsePaging(IncludeTotalCount = true)]
+        [UsePaging(IncludeTotalCount = true, MaxPageSize = 1000)]
         [UseProjection]
         [UseFiltering]
         [UseSorting]
