@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 
 using UserStorrage6.Model.DB;
-using UserStorrage6.Model.Short;
+using UserStorrage6.Model.Requests.GraphQl;
+using UserStorrage6.Model.Requests.Rest;
+using UserStorrage6.Model.Requests.Short;
 
 namespace UserStorrage6.Model.AutoMapper
 {
@@ -18,13 +20,43 @@ namespace UserStorrage6.Model.AutoMapper
                 .ForMember(x => x.Permissions, opt => opt.Ignore())
                 .ForMember(x => x.Roles, opt => opt.Ignore());
 
-            CreateMap<Role, RoleRequest>().ForMember(x => x.ServiceKey, opt => opt.Ignore());
-            CreateMap<RoleRequest, Role>().ForMember(x => x.Service, opt => opt.Ignore());
+            CreateMap<ServiceSyncRequest, ServiceSyncUserRequest>()
+                .ForMember(x => x.Users, opt => opt.Ignore());
+            CreateMap<ServiceSyncUserRequest, ServiceSyncRequest>();
 
-            CreateMap<Permission, PermissionRequest>().ForMember(x => x.ServiceKey, opt => opt.Ignore());
-            CreateMap<PermissionRequest, Permission>().ForMember(x => x.Service, opt => opt.Ignore());
+            CreateMap<ServiceSyncRequest, ServiceSyncPermissionRequest>()
+                .ForMember(x => x.Permissions, opt => opt.Ignore());
+            CreateMap<ServiceSyncPermissionRequest, ServiceSyncRequest>();
 
-            CreateMap<Service, ServiceRequest>().ReverseMap();
+            CreateMap<ServiceSyncRequest, RoleSyncRequest>()
+                .ForMember(x => x.Roles, opt => opt.Ignore());
+            CreateMap<RoleSyncRequest, ServiceSyncRequest>();
+
+            CreateMap<ServiceSyncRequest, Service>()
+                .ForMember(x => x.Users, opt => opt.Ignore())
+                .ForMember(x => x.Id, opt => opt.Ignore());
+            CreateMap<Service, ServiceSyncRequest>();
+
+
+            CreateMap<PermissionShort, Permission>()
+                .ForMember(x => x.Users, opt => opt.Ignore())
+                .ForMember(x => x.Id, opt => opt.Ignore())
+                .ForMember(x => x.Service, opt => opt.Ignore());
+            CreateMap<Permission, PermissionShort>();
+
+            CreateMap<RoleShort, Role>()
+                .ForMember(x => x.Users, opt => opt.Ignore())
+                .ForMember(x => x.Id, opt => opt.Ignore())
+                .ForMember(x => x.Service, opt => opt.Ignore());
+            CreateMap<Role, RoleShort>();
+
+            //CreateMap<Role, RoleShort>().ForMember(x => x.SysId, opt => opt.Ignore());
+            //CreateMap<RoleShort, Role>().ForMember(x => x.Service, opt => opt.Ignore());
+
+            //CreateMap<Permission, PermissionShort>().ForMember(x => x.SysId, opt => opt.Ignore());
+            //CreateMap<PermissionShort, Permission>().ForMember(x => x.Service, opt => opt.Ignore());
+
+            CreateMap<Service, ServiceSyncUserRequest>().ReverseMap();
         }
     }
 }

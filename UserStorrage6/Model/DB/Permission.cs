@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
 namespace UserStorrage6.Model.DB
@@ -28,7 +29,12 @@ namespace UserStorrage6.Model.DB
         public bool? IsNeedAprove { get; set; }
 
         [Required]
-        public virtual Service? Service { get; set; }
+        [IgnoreDataMember]
+        public virtual Service Service { get; set; }
+
+
+        [IgnoreDataMember]
+        public virtual ICollection<Role> Roles { get; set; } = new List<Role>();
 
         public string? Comment { get; set; }
 
@@ -36,24 +42,12 @@ namespace UserStorrage6.Model.DB
 
         public DateTime UpdateAt { get; set; } = DateTime.UtcNow;
 
+        public DateTime SyncAt { get; set; } = DateTime.UtcNow;
+
+
+        [IgnoreDataMember]
         public virtual List<User>? Users { get; set; }
     }
 
-        public virtual List<User>? Users { get; set; }
-    {
-        [Required]
-        public string SysId { get; set; }
 
-        public string? Name { get; set; }
-
-        public string? Description { get; set; }
-
-        public Status Status { get; set; }
-
-        public bool? IsNeedAprove { get; set; }
-
-        public virtual string? ServiceKey { get; set; }
-
-        public string? Comment { get; set; }
-    }
 }

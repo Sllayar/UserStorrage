@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
 namespace UserStorrage6.Model.DB
@@ -13,7 +14,6 @@ namespace UserStorrage6.Model.DB
         public int Id { get; set; }
 
         [Required]
-        [Key]
         public string SysId { get; set; }
 
         [Required]
@@ -29,7 +29,7 @@ namespace UserStorrage6.Model.DB
         public bool? IsNeedAprove { get; set; }
 
         [Required]
-        [Key]
+        [IgnoreDataMember]
         public virtual Service? Service { get; set; }
 
         public string? Comment { get; set; }
@@ -38,29 +38,17 @@ namespace UserStorrage6.Model.DB
 
         public DateTime UpdateAt { get; set; } = DateTime.UtcNow;
 
-        public virtual List<Permission>? SysPermitions { get; set; }
+        public DateTime SyncAt { get; set; } = DateTime.UtcNow;
 
-        public virtual List<User>? Users { get; set; }
-    }
+        public virtual ICollection<Permission> SysPermitions { get; set; } = new List<Permission>();
 
-    public class RoleRequest
-    {
-        [Required]
-        public string SysId { get; set; }
 
-        public string? Name { get; set; }
+        [IgnoreDataMember]
+        public virtual List<User>? Users { get; set; } = new List<User>();
 
-        public string? Description { get; set; }
-
-        [Required]
-        public Status Status { get; set; }
-
-        [Required]
-        public bool? IsNeedAprove { get; set; }
-
-        [Required]
-        public virtual string? ServiceKey { get; set; }
-
-        public string? Comment { get; set; }
+        public static implicit operator List<object>(Role v)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

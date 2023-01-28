@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using UserStorrage6.Model.DB;
 
-namespace UserStorrage6.Model.Short
+namespace UserStorrage6.Model.Requests.Short
 {
     public class UserShort
     {

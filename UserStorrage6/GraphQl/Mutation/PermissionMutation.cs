@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using UsersStorrage.Models.Context;
 using UserStorrage6.Model.DB;
+using UserStorrage6.Model.Requests;
+using UserStorrage6.Model.Requests.GraphQl;
 
 namespace UserStorrage6.GraphQl.Mutation
 {

@@ -1,36 +1,35 @@
 ﻿using AutoMapper;
-
-using Microsoft.EntityFrameworkCore;
-
-using System.Linq;
-
 using UsersStorrage.Models.Context;
 
+using UserStorrage6.Model.Context.Repository;
 using UserStorrage6.Model.DB;
+using UserStorrage6.Model.Requests.GraphQl;
 using UserStorrage6.Model.Requests.Rest;
 using UserStorrage6.Model.Requests.Short;
 using UserStorrage6.Services.Interfaces;
 
-namespace UserStorrage6.Services
+namespace UserStorrage6.Services.Brockers
 {
-    public class UserService : IUserService
+    public class UserBrockerService : IUserBrockerService
     {
-        private readonly ApplicationDbContext _applicationDbContext;
         private readonly IMapper _mapper;
+        private readonly IServicesBrockersService _service;
 
-        public UserService(
-            ApplicationDbContext applicationDbContext,
-            IMapper mapper) 
+        public UserBrockerService(
+            IMapper mapper, 
+            IServicesBrockersService service)
         {
-            _applicationDbContext = applicationDbContext;
             _mapper = mapper;
+            _service = service;
         }
-        public async Task<Service> PartSinhronize(ServiceSyncUserRequest service, DateTime syncDate)
+
+        public async Task<List<User>?> PartSinhronize(
+            IDataBrocker dataBrocker, ServiceSyncUserRequest service, DateTime syncDate)
         {
-            var currentService =
-                _applicationDbContext.Services
-                .Include(s => s.Users)
-                .FirstOrDefault(dbService => service.Key == dbService.Key);
+            var updatedService = await _service.CreateOrUpdate(
+                dataBrocker, _mapper.Map<ServiceSyncRequest>(service));
+
+            var currentService = dataBrocker.GetServiceWithUser(updatedService.Id);
 
             var currentDate = DateTime.UtcNow;
 
@@ -39,24 +38,27 @@ namespace UserStorrage6.Services
                 var currentUser = currentService?.Users?
                     .FirstOrDefault(u => u.SysId == user.SysId);
 
-                if (currentUser == null) AddNewUser(currentService, user, currentDate, syncDate);
+                if (currentUser == null) AddNewUser(dataBrocker, currentService, user, currentDate, syncDate);
                 else UpdateUser(currentUser, user, currentDate, syncDate);
             }
 
-            await _applicationDbContext.SaveChangesAsync();
+            await dataBrocker.SaveChangesAsync();
 
-            currentService.Users = currentService?.Users?.Where(u =>
-                service.Users.Exists(user => user.SysId == u.SysId)).ToList();
+            foreach (var user in service.Users)
+                AddRoleAndPermissions(dataBrocker, updatedService, user);
 
-            return currentService;
+            await dataBrocker.SaveChangesAsync();
+
+            return dataBrocker.GetServiceWithUser(updatedService.Id).Users?
+                .Where(u =>
+                    service.Users.Exists(user => user.SysId == u.SysId))
+                .ToList();
         }
 
-        public async Task<Service> DeleteNotUpdatedUsers(string serviceKey, DateTime syncDate)
+        public async Task<List<User>?> DeleteNotUpdatedUsers(
+            IDataBrocker dataBrocker, string serviceKey, DateTime syncDate)
         {
-            var currentService =
-                _applicationDbContext.Services
-                .Include(s => s.Users)
-                .FirstOrDefault(dbService => serviceKey == dbService.Key);
+            var currentService = dataBrocker.GetServiceWithUser(serviceKey);
 
             var exceptUsers = currentService?.Users?
                .Where(u => u.SyncAt != syncDate.ToUniversalTime())
@@ -67,23 +69,19 @@ namespace UserStorrage6.Services
 
             DeleteNotUpdatedUsers(currentService, exceptUsers, currentDate, syncDate);
 
-            await _applicationDbContext.SaveChangesAsync();
+            await dataBrocker.SaveChangesAsync();
 
-            currentService.Users = currentService?.Users?.Where(u => 
-                u.UpdateAt == syncDate.ToUniversalTime() && u.Status == Status.Delete).ToList();
-
-            return currentService;
+            return currentService?.Users?.Where(u =>
+                u.UpdateAt == syncDate.ToUniversalTime() && u.Status == Status.Delete).ToList(); ;
         }
 
-        public async Task<Service> Sinhronize(ServiceSyncUserRequest service)
+        public async Task<List<User>?> Sinhronize(
+            IDataBrocker dataBrocker, ServiceSyncUserRequest service)
         {
-            var currentService =
-                _applicationDbContext.Services
-                .Include(s => s.Users)
-                .FirstOrDefault(dbService => service.Key == dbService.Key);
+            var updatedService = await _service.CreateOrUpdate(
+                dataBrocker, _mapper.Map<ServiceSyncRequest>(service));
 
-            if (currentService == null) currentService = AddService(service);
-            else UpdateService(service, currentService);
+            var currentService = dataBrocker.GetServiceWithUser(updatedService.Id);
 
             var currentDate = DateTime.UtcNow;
 
@@ -92,7 +90,7 @@ namespace UserStorrage6.Services
                 var currentUser = currentService?.Users?
                     .FirstOrDefault(u => u.SysId == user.SysId);
 
-                if (currentUser == null) AddNewUser(currentService, user, currentDate, currentDate);
+                if (currentUser == null) AddNewUser(dataBrocker, currentService, user, currentDate, currentDate);
                 else UpdateUser(currentUser, user, currentDate, currentDate);
             }
 
@@ -103,9 +101,14 @@ namespace UserStorrage6.Services
 
             DeleteNotUpdatedUsers(currentService, exceptUsers, currentDate, currentDate);
 
-            await _applicationDbContext.SaveChangesAsync();
+            await dataBrocker.SaveChangesAsync();
 
-            return currentService;
+            foreach (var user in service.Users)
+                AddRoleAndPermissions(dataBrocker, updatedService, user);
+
+            await dataBrocker.SaveChangesAsync();
+
+            return dataBrocker.GetServiceWithUser(updatedService.Id).Users;
         }
 
         private void DeleteNotUpdatedUsers(Service currentService,
@@ -135,7 +138,7 @@ namespace UserStorrage6.Services
                 currentUser.OwnerLogin == user.OwnerLogin &&
                 currentUser.Status == user.Status &&
                 currentUser.SysLogin == user.SysLogin &&
-                currentUser.Type == user.Type )
+                currentUser.Type == user.Type)
                 return;
 
             currentUser.Comment = user.Comment;
@@ -146,7 +149,7 @@ namespace UserStorrage6.Services
             currentUser.UpdateAt = currentdate.ToUniversalTime();
         }
 
-        private User? AddNewUser(Service? currentService,
+        private User? AddNewUser(IDataBrocker dataBrocker, Service? currentService,
             UserShort user, DateTime currentdate, DateTime syncTime)
         {
             if (currentService == null) return null;
@@ -161,17 +164,22 @@ namespace UserStorrage6.Services
             return newUser;
         }
 
-        private async Task AddRoleAndPermissions(Service service, UserShort userReq)
+        private void AddRoleAndPermissions(
+            IDataBrocker dataBrocker, Service service, UserShort userReq)
         {
-            var user = _applicationDbContext.Users
-                .Include(u => u.Roles)
-                .Include(u => u.Permissions)
-                .FirstOrDefault(u => u.SysId == userReq.SysId);
+            var user = dataBrocker.GetUser(userReq.SysId, service.Key);
 
-            if (user == null) return;
+            AddPermissions(user, dataBrocker, service, userReq);
+            AddRoles(user, dataBrocker, service, userReq);
+        }
 
-            var permissions = _applicationDbContext.Permissions
-                .Where(p => p.Service.Key.Equals(service.Key))
+        private void AddPermissions(User? user,
+            IDataBrocker dataBrocker, Service service, UserShort userReq)
+        {
+            if (userReq?.Permissions == null) return;
+
+            var permissions = dataBrocker
+                .GetPermissions(service.Key)
                 .ToList();
 
             foreach (var permission in userReq.Permissions)
@@ -181,9 +189,15 @@ namespace UserStorrage6.Services
                 if (newPermission == null) throw new Exception($"Несуществующий параметр {permission}");
                 else user.Permissions.Add(newPermission);
             }
+        }
 
-            var roles = _applicationDbContext.Roles
-                .Where(r => r.Service.Key.Equals(service.Key))
+        private void AddRoles(User? user,
+            IDataBrocker dataBrocker, Service service, UserShort userReq)
+        {
+            if (userReq?.Roles == null) return;
+
+            var roles = dataBrocker
+                .GetRole(service.Key)
                 .ToList();
 
             foreach (var role in userReq.Roles)
@@ -193,25 +207,6 @@ namespace UserStorrage6.Services
                 if (newRole == null) throw new Exception($"Несуществующий параметр {role}");
                 else user.Roles.Add(newRole);
             }
-
-            await _applicationDbContext.SaveChangesAsync();
-        }
-
-        private Service AddService(ServiceSyncUserRequest service)
-        {
-            var newService = _mapper.Map<Service>(service);
-
-            _applicationDbContext.Services.Add(newService);
-
-            return newService;
-        }
-
-        private void UpdateService(ServiceSyncUserRequest service, Service updated)
-        {
-            updated.Name = service.Name;
-            updated.Status = service.Status;
-            updated.Author = service.Author;
-            updated.Contacts = service.Contacts;
         }
     }
 }

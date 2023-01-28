@@ -28,9 +28,30 @@ namespace UsersStorrage.Models.Context
             DbContextOptions<ApplicationDbContext> options
             ) : base(options)
         {
+#if DEBUG
+            _connectionString = configuration.GetValue<string>("USER_DB_DEBUG");
+#else
             _connectionString = configuration.GetValue<string>("USER_DB");
+#endif
             if (string.IsNullOrEmpty(_connectionString))
-                throw new Exception("Envariment USER_DB is null");
+                _connectionString = "Host=127.0.0.1;Port=5432;Database=UserStorrage;Username=User;Password=1234567890";
+            _LoggerFactory = loggerFactory;
+
+            Database.EnsureCreated();
+        }
+
+        public ApplicationDbContext(
+            IConfiguration configuration,
+            ILoggerFactory loggerFactory
+            ) : base()
+        {
+#if DEBUG
+            _connectionString = configuration.GetValue<string>("USER_DB_DEBUG");
+#else
+            _connectionString = configuration.GetValue<string>("USER_DB");
+#endif
+            if (string.IsNullOrEmpty(_connectionString))
+                _connectionString = "Host=127.0.0.1;Port=5432;Database=UserStorrage;Username=User;Password=1234567890";
             _LoggerFactory = loggerFactory;
 
             Database.EnsureCreated();
@@ -54,6 +75,10 @@ namespace UsersStorrage.Models.Context
             modelBuilder.Entity<User>()
                 .HasMany(c => c.Permissions)
                 .WithMany(s => s.Users);
+
+            modelBuilder.Entity<Role>()
+                .HasMany(c => c.SysPermitions)
+                .WithMany(s => s.Roles);
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

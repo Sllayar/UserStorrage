@@ -1,8 +1,8 @@
 ﻿using UsersStorrage.Models.Context;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using AutoMapper;
-using UserStorrage6.Model.Short;
 using UserStorrage6.Model.DB;
+using UserStorrage6.Model.Requests.Short;
 
 namespace UserStorrage6.GraphQl.Mutation
 {

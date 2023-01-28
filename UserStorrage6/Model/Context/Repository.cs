@@ -19,6 +19,7 @@ namespace UserStorrage6.Model.Context
     public class PostgreRepository<TEntity> : IRepository<TEntity>, IDisposable where TEntity : class
     {
         private ApplicationDbContext _appContext;
+
         public PostgreRepository(
             IConfiguration config,
             ILoggerFactory loggerFactory,

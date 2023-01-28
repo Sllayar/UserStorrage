@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using UsersStorrage.Models.Context;
 using UserStorrage6.Model.DB;
+using UserStorrage6.Model.Requests.Short;
 
 namespace UserStorrage6.GraphQl.Mutation
 {
@@ -17,12 +18,12 @@ namespace UserStorrage6.GraphQl.Mutation
         public async Task<Role?> AddRole(
             [Service] ApplicationDbContext applicationDbContext,
             [Service] IMapper mapper,
-            RoleRequest roleRequset)
+            RoleShort roleRequset)
         {
             var newRole = mapper.Map<Role>(roleRequset);
 
-            var service = applicationDbContext.Services.FirstOrDefault(s => s.Key == roleRequset.ServiceKey);
-            if (service == null) throw new ArgumentException($"Service с именем {roleRequset.ServiceKey} " +
+            var service = applicationDbContext.Services.FirstOrDefault(s => s.Key == roleRequset.SysId);
+            if (service == null) throw new ArgumentException($"Service с именем {roleRequset.SysId} " +
                     $"не зарегистрирован");
             newRole.Service = service;
 

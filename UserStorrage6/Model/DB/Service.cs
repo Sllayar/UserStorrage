@@ -25,6 +25,6 @@ namespace UserStorrage6.Model.DB
 
         public string? Contacts { get; set; }
 
-        public virtual List<User>? Users { get; set; }
+        public virtual List<User>? Users { get; set; } = new List<User>();
     }
 }
