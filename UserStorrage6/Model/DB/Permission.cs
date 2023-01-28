@@ -39,7 +39,7 @@ namespace UserStorrage6.Model.DB
         public virtual List<User>? Users { get; set; }
     }
 
-    public class PermissionRequest
+        public virtual List<User>? Users { get; set; }
     {
         [Required]
         public string SysId { get; set; }
