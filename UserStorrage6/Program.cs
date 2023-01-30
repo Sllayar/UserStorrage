@@ -22,8 +22,8 @@ builder.Services.AddControllers().AddNewtonsoftJson(o =>
 {
     o.SerializerSettings.MissingMemberHandling = Newtonsoft.Json.MissingMemberHandling.Error;
 
-    o.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Serialize;
-    o.SerializerSettings.PreserveReferencesHandling = Newtonsoft.Json.PreserveReferencesHandling.Objects;
+    //o.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Serialize;
+    //o.SerializerSettings.PreserveReferencesHandling = Newtonsoft.Json.PreserveReferencesHandling.Objects;
     o.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
 });
     //o.SerializerSettings.MissingMemberHandling = Newtonsoft.Json.MissingMemberHandling.Error);

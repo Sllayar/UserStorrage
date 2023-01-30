@@ -3,11 +3,7 @@
 using UserStorrage6.Model.Context.Repository;
 using UserStorrage6.Model.DB;
 using UserStorrage6.Model.Requests.Rest;
-using UserStorrage6.Services.Brockers;
-using UserStorrage6.Services;
 using UserStorrage6.Services.Interfaces;
-using System.Data;
-using Microsoft.Extensions.Configuration;
 using UserStorrage6.Model.Requests.GraphQl;
 using System.ComponentModel.DataAnnotations;
 
@@ -23,7 +19,6 @@ namespace UserStorrage6.Controllers
         private readonly IRoleBrockerService _roleService;
         private readonly IPermissionBrockerService _permissionService;
 
-
         public TestController(
             TestBrocker testBrocker, 
             IUserBrockerService userBrockerService,
@@ -36,22 +31,26 @@ namespace UserStorrage6.Controllers
             _roleService = roleBrockerService;
         }
 
-        [HttpGet(Name ="History")]
-        [ActionName("History")]
+        [HttpGet(Name = "Test/Clear")]
+        [ActionName("Test/Clear")]
+        public void Clear() => _testBrocker.Dispose();
+        
+        [HttpGet(Name = "Test/History")]
+        [ActionName("Test/History")]
         public List<History> GetHistories() 
         {
             return _testBrocker.Historys;
         }
 
-        [HttpGet(Name = "Services")]
-        [ActionName("Services")]
+        [HttpGet(Name = "Test/Services")]
+        [ActionName("Test/Services")]
         public List<Service> GetServices()
         {
             return _testBrocker.Services;
         }
 
-        [HttpGet(Name = "Users")]
-        [ActionName("Users")]
+        [HttpGet(Name = "Test/Users")]
+        [ActionName("Test/Users")]
         public List<User> GetUsers([FromHeader]string ServiceKey)
         {
             if (_testBrocker.Services.Count == 0) return new List<User>();
@@ -59,15 +58,15 @@ namespace UserStorrage6.Controllers
             return _testBrocker.Services.FirstOrDefault(s => s.Key == ServiceKey).Users;
         }
 
-        [HttpGet(Name = "Roles")]
-        [ActionName("Roles")]
+        [HttpGet(Name = "Test/Roles")]
+        [ActionName("Test/Roles")]
         public List<Role> GetRoles()
         {
             return _testBrocker.Roles;
         }
 
-        [HttpGet(Name = "Permissions")]
-        [ActionName("Permissions")]
+        [HttpGet(Name = "Test/Permissions")]
+        [ActionName("Test/Permissions")]
         public List<Permission> GetPermissions()
         {
             return _testBrocker.Permissions;
