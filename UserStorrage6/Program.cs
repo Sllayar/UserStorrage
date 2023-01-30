@@ -44,7 +44,9 @@ builder.Services.AddDbContext<ApplicationDbContext>();
 //builder.Services.AddScoped<ISynhronizeService<Role>, SynhronizeService<Role>>();
 
 
+#if DEBUG
 builder.Services.AddSingleton<TestBrocker>();
+#endif
 
 builder.Services.AddScoped<IRoleBrockerService, RoleBrockerService>();
 builder.Services.AddScoped<IServicesBrockersService, ServicesBrockerService>();
