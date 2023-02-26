@@ -65,61 +65,6 @@ namespace UserStorrage6.Services
                 .ToList();
         }
 
-        public async Task<List<Permission>?> Synhronize(
-            RoleSyncRequest roleSyncRequest, DateTime currentDate, DateTime syncTime)
-        {
-            if (roleSyncRequest == null || roleSyncRequest.Roles.Count == 0) return new List<Permission>();
-
-            var updatedService = await _service.CreateOrUpdate(_mapper.Map<ServiceSyncRequest>(roleSyncRequest));
-
-            var existPermissions = _applicationDbContext.Permissions
-                .Include(s => s.Users)
-                .Include(s => s.Service)
-                .Where(p => p.Service.Key == roleSyncRequest.Key)
-                .ToList();
-
-            var result = new List<Permission>();
-
-            foreach (var role in roleSyncRequest.Roles)
-                foreach (var permission in role.Permitions)
-            {
-                var curentPermissions = existPermissions?.FirstOrDefault(p => p.SysId == permission.SysId);
-
-                if (curentPermissions == null) result.Add(CreatePermission(updatedService, permission, currentDate, syncTime));
-                else result.Add(TryUpdatePermission(curentPermissions, permission, currentDate, syncTime));
-            }
-
-            await _applicationDbContext.SaveChangesAsync();
-
-            return result;
-        }
-
-        public async Task<List<Permission>?> Synhronize(
-            List<PermissionShort>? permitions, Service service, DateTime currentDate, DateTime syncTime)
-        {
-            if (permitions == null || permitions.Count == 0) return new List<Permission>();
-
-            var existPermissions = _applicationDbContext.Permissions
-                .Include(s => s.Users)
-                .Include(s => s.Service)
-                .Where(p => p.Service.Id == service.Id)
-                .ToList();
-
-            var result = new List<Permission>();
-
-            foreach (var permission in permitions)
-            {
-                var curentPermissions = existPermissions?.FirstOrDefault(p => p.SysId == permission.SysId);
-
-                if (curentPermissions == null) result.Add(CreatePermission(service, permission, currentDate, syncTime));
-                else result.Add(TryUpdatePermission(curentPermissions, permission, currentDate, syncTime));
-            }
-
-            //await _applicationDbContext.SaveChangesAsync();
-
-            return result;
-        }
-
         public Permission TryUpdatePermission(Permission permission,
             PermissionShort newPermission, DateTime currentdate, DateTime syncTime)
         {

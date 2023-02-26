@@ -20,7 +20,6 @@ namespace UserStorrage6.Controllers
         private readonly IConfiguration _configuration;
         private readonly ILoggerFactory _loggerFactory;
 
-
         public UsersSynhronizeController(
             IUserBrockerService userBrockerService,
             IConfiguration configuration,
@@ -41,7 +40,7 @@ namespace UserStorrage6.Controllers
         {
             using (var postgreBrocker = new PostgreBrocker(_configuration, _loggerFactory))
             {
-                var res = await _userBrockerService.PartSinhronize(
+                var res = _userBrockerService.PartSinhronize(
                         postgreBrocker, service,
                         statrtSyncTime == null ? DateTime.UtcNow : (DateTime)statrtSyncTime);
 
@@ -53,15 +52,15 @@ namespace UserStorrage6.Controllers
             }
         }
 
-        [HttpDelete(Name = "Synhronize/Service/User")]
-        [ActionName("Synhronize/Service/User")]
+        [HttpPost(Name = "Synhronize/Service/User/Part/Finish")]
+        [ActionName("Synhronize/Service/User/Part/Finish")]
         public async Task<Model.Result> DeleteNotUpdatedUsers(
             [Required][FromQuery] string serviceKey,
             [Required][FromQuery] DateTime statrtSyncTime)
         {
             using (var postgreBrocker = new PostgreBrocker(_configuration, _loggerFactory))
             {
-                var res = await _userBrockerService.DeleteNotUpdatedUsers(postgreBrocker, serviceKey, statrtSyncTime);
+                var res = _userBrockerService.DeleteNotUpdatedUsers(postgreBrocker, serviceKey, statrtSyncTime);
 
                 return await _synhronizeService.Synhronize(
                     postgreBrocker,
@@ -77,7 +76,7 @@ namespace UserStorrage6.Controllers
         {
             using (var postgreBrocker = new PostgreBrocker(_configuration, _loggerFactory))
             {
-                var res = await _userBrockerService.Sinhronize(postgreBrocker, service);
+                var res = _userBrockerService.Sinhronize(postgreBrocker, service);
 
                 return await _synhronizeService.Synhronize(
                     postgreBrocker,

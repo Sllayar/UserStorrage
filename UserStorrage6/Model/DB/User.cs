@@ -41,8 +41,8 @@ namespace UserStorrage6.Model.DB
 
         public DateTime SyncAt { get; set; } = DateTime.UtcNow;
 
-        public virtual List<Role>? Roles { get; set; } = new List<Role>();
+        public virtual List<Role> Roles { get; set; } = new List<Role>();
 
-        public virtual List<Permission>? Permissions { get; set; } = new List<Permission>();
+        public virtual List<Permission> Permissions { get; set; } = new List<Permission>();
     }
 }

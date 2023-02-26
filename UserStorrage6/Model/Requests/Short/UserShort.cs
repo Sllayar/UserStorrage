@@ -24,8 +24,8 @@ namespace UserStorrage6.Model.Requests.Short
 
         public string? Comment { get; set; }
 
-        public string[]? Roles { get; set; }
+        public string[] Roles { get; set; } = new string[0];
 
-        public string[]? Permissions { get; set; }
+        public string[] Permissions { get; set; } = new string[0];
     }
 }

@@ -34,7 +34,7 @@ namespace UsersStorrage.Models.Context
             _connectionString = configuration.GetValue<string>("USER_DB");
 #endif
             if (string.IsNullOrEmpty(_connectionString))
-                _connectionString = "Host=127.0.0.1;Port=5432;Database=UserStorrage;Username=User;Password=1234567890";
+                _connectionString = "Host=127.0.0.1;Port=5432;Database=DebugUserStorrage;Username=User;Password=12345678";
             _LoggerFactory = loggerFactory;
 
             Database.EnsureCreated();
@@ -51,7 +51,7 @@ namespace UsersStorrage.Models.Context
             _connectionString = configuration.GetValue<string>("USER_DB");
 #endif
             if (string.IsNullOrEmpty(_connectionString))
-                _connectionString = "Host=127.0.0.1;Port=5432;Database=UserStorrage;Username=User;Password=1234567890";
+                _connectionString = "Host=127.0.0.1;Port=5432;Database=DebugUserStorrage;Username=User;Password=12345678";
             _LoggerFactory = loggerFactory;
 
             Database.EnsureCreated();

@@ -26,12 +26,72 @@ namespace UserStorrage6.Services.Brockers
             _permissionService = permissionService;
         }
 
+        public async Task<List<Role>?> SynhronizePart(
+            IDataBrocker dataBrocker, RoleSyncRequest service, DateTime currentdate)
+        {
+            var currentDate = DateTime.UtcNow;
+
+            var updatedService = await _service.CreateOrUpdate(
+                dataBrocker, _mapper.Map<ServiceSyncRequest>(service));
+
+            CheckForExist(dataBrocker.GetPermissions(updatedService.Key).ToList(), service.Roles);
+
+            var existRole = dataBrocker
+                .GetRoleFull(updatedService.Id)
+                .ToList();
+
+            foreach (var newRole in service.Roles)
+            {
+                var role = existRole.FirstOrDefault(r => r.SysId == newRole.SysId);
+
+                var existPermissions = dataBrocker
+                    .GetPermissionsFull(updatedService.Id)
+                    .ToList()
+                    .Where(p => !string.IsNullOrEmpty(newRole.Permitions.Find(n => n.Equals(p.SysId))))
+                    .ToList();
+
+                if (role == null) AddNewRole(dataBrocker, updatedService, newRole, existPermissions, currentDate, currentdate);
+                else TryUpdateRole(role, newRole, updatedService, existPermissions, currentDate, currentdate);
+            }
+
+            await dataBrocker.SaveChangesAsync();
+
+            return dataBrocker
+                .GetRoleFull(updatedService.Id)
+                .ToList()
+                .Where(db => service.Roles.FirstOrDefault(s => s.SysId == db.SysId) != null)
+                .ToList();
+        }
+
+        public async Task<List<Role>?> SynhronizePartFinish(
+            IDataBrocker dataBrocker, string serviceKey, DateTime syncDate)
+        {
+            var roles = dataBrocker.GetRole(serviceKey).ToList();
+
+            foreach (var role in roles)
+            {
+                if (role.UpdateAt != syncDate.ToUniversalTime() && 
+                    (role != null || role.Status != Status.Delete))
+                {
+                    role.Status = Status.Delete;
+                    role.SyncAt = syncDate.ToUniversalTime();
+                    role.UpdateAt = syncDate.ToUniversalTime();
+                }
+            }
+
+            await dataBrocker.SaveChangesAsync();
+
+            return dataBrocker.GetRole(serviceKey).ToList();
+        }
+
         public async Task<List<Role>?> Synhronize(IDataBrocker dataBrocker, RoleSyncRequest roleSyncRequest, DateTime syncDate)
         {
             var currentDate = DateTime.UtcNow;
 
             var updatedService = await _service.CreateOrUpdate(
                 dataBrocker, _mapper.Map<ServiceSyncRequest>(roleSyncRequest));
+
+            CheckForExist(dataBrocker.GetPermissions(updatedService.Key).ToList(), roleSyncRequest.Roles);
 
             var existRole = dataBrocker
                 .GetRoleFull(updatedService.Id)
@@ -41,11 +101,14 @@ namespace UserStorrage6.Services.Brockers
             {
                 var role = existRole.FirstOrDefault(r => r.SysId == newRole.SysId);
 
-                var permission = await _permissionService
-                    .Synhronize(dataBrocker, newRole.Permitions, updatedService, currentDate, syncDate);
+                var existPermissions = dataBrocker
+                    .GetPermissionsFull(updatedService.Id)
+                    .ToList()
+                    .Where(p => !string.IsNullOrEmpty(newRole.Permitions.Find(n => n.Equals(p.SysId))))
+                    .ToList();
 
-                if (role == null) AddNewRole(dataBrocker, updatedService, newRole, permission, currentDate, syncDate);
-                else TryUpdateRole(role, newRole, updatedService, permission, currentDate, syncDate);
+                if (role == null) AddNewRole(dataBrocker, updatedService, newRole, existPermissions, currentDate, syncDate);
+                else TryUpdateRole(role, newRole, updatedService, existPermissions, currentDate, syncDate);
             }
 
 
@@ -63,10 +126,17 @@ namespace UserStorrage6.Services.Brockers
                 .ToList();
         }
 
+        private void CheckForExist(List<Permission> permissions, List<RoleShort> roleShorts)
+        {
+            foreach (var role in roleShorts)
+                if(role.Permitions.Except(permissions.Select(p => p.SysId)).Count() > 0)
+                    throw new Exception($"Обнаружена попытка добавить несуществующее право.");
+        }
+
         private Role TryUpdateRole(Role role, RoleShort roleShort,
             Service service, List<Permission>? permissions, DateTime currentDate, DateTime syncTime)
         {
-            role.SyncAt = syncTime.ToUniversalTime();
+            role.SyncAt = currentDate.ToUniversalTime();
 
             if (role.Name == roleShort.Name &&
                 role.Description == roleShort.Description &&
@@ -75,19 +145,21 @@ namespace UserStorrage6.Services.Brockers
                 role.Comment == roleShort.Comment &&
 
                 (permissions == null ||
-                permissions.FirstOrDefault(p =>
-                    p.UpdateAt.ToUniversalTime() == currentDate.ToUniversalTime()) == null))
+                permissions.Count(p =>
+                    p.UpdateAt.ToUniversalTime() == currentDate.ToUniversalTime()) != 0))
                 return role;
 
             role.Service = service;
+
+            role.SysPermitions = permissions;
+
+            role.UpdateAt = syncTime.ToUniversalTime();
 
             role.Name = roleShort.Name;
             role.Description = roleShort.Description;
             role.Status = roleShort.Status;
             role.IsNeedAprove = roleShort.IsNeedAprove;
             role.Comment = roleShort.Comment;
-
-            role.UpdateAt = currentDate.ToUniversalTime();
 
             role.Users?.ForEach(u =>
                 u.UpdateAt = currentDate.ToUniversalTime());
@@ -103,9 +175,9 @@ namespace UserStorrage6.Services.Brockers
             role.Service = serviceKey;
             role.SysPermitions = permissions;
 
-            role.UpdateAt = currentdate.ToUniversalTime();
+            role.UpdateAt = syncTime.ToUniversalTime();
             role.CreateAT = currentdate.ToUniversalTime();
-            role.SyncAt = syncTime.ToUniversalTime();
+            role.SyncAt = currentdate.ToUniversalTime();
 
             dataBrocker.AttachRole(role);
 
@@ -125,10 +197,12 @@ namespace UserStorrage6.Services.Brockers
                 if (curRoles != null || curRoles.Status != Status.Delete)
                 {
                     curRoles.Status = Status.Delete;
-                    curRoles.SyncAt = syncTime.ToUniversalTime();
-                    curRoles.UpdateAt = currentdate.ToUniversalTime();
+                    curRoles.SyncAt = currentdate.ToUniversalTime();
+                    curRoles.UpdateAt = syncTime.ToUniversalTime();
                 }
             }
         }
+
+
     }
 }

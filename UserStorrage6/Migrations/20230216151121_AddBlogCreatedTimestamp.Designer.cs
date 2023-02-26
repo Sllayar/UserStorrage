@@ -12,8 +12,8 @@ using UsersStorrage.Models.Context;
 namespace UserStorrage6.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230124153252_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20230216151121_AddBlogCreatedTimestamp")]
+    partial class AddBlogCreatedTimestamp
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

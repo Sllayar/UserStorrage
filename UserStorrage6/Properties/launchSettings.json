@@ -3,11 +3,12 @@
     "UserStorrage6": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "graphql/",
+      //"launchUrl": "graphql/",
+      "launchUrl": "swagger/",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
         "USER_DB": "Host=localhost;Port=5432;Database=user_db;Username=admin;Password=psltest",
-        "USER_DB_DEBUG": "Host=127.0.0.1;Port=5432;Database=UserStorrage;Username=User;Password=1234567890"
+        "USER_DB_DEBUG": "Host=127.0.0.1;Port=5432;Database=DebugUserStorrage;Username=User;Password=12345678"
       },
       "dotnetRunMessages": true,
       "applicationUrl": "https://localhost:7023;http://localhost:5119"

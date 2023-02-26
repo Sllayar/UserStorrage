@@ -9,6 +9,6 @@ namespace UserStorrage6.Services.Interfaces
     {
         //Task<Result> Synhronize(IDataBrocker dataBrocker, string method, object service, Task<List<T>> task);
 
-        Task<Result> Synhronize(IDataBrocker dataBrocker, string method, object service, List<T>? data);
+        Task<Result> Synhronize(IDataBrocker dataBrocker, string method, object service, Task<List<T>> data);
     }
 }

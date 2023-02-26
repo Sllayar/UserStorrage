@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
+using System.ComponentModel.DataAnnotations;
+
 using UserStorrage6.Model.Context.Repository;
 using UserStorrage6.Model.DB;
 using UserStorrage6.Model.Requests.Rest;
@@ -30,7 +32,6 @@ namespace UserStorrage6.Controllers
 
         [HttpPost(Name = "Service/Synhronize/Permissions")]
         [ActionName("Service/Synhronize/Permissions")]
-        //public async Task<Model.Result> Synhronize(ServiceSyncPermissionRequest request,
         public async Task<Model.Result?> Synhronize(ServiceSyncPermissionRequest request,
         [FromQuery] DateTime? statrtSyncTime)
         {
@@ -40,11 +41,53 @@ namespace UserStorrage6.Controllers
                     postgreBrocker,
                     ControllerContext?.RouteData?.Values["action"]?.ToString(),
                     new { ServiceKey = request, SyncTime = statrtSyncTime },
-                    await _permissionService.Synhronize(
+                    _permissionService.Synhronize(
                         postgreBrocker,
                         request,
                         statrtSyncTime == null ? DateTime.UtcNow : (DateTime)statrtSyncTime));
 
+            }
+        }
+
+
+        [HttpPost(Name = "Service/Synhronize/Permissions/Part")]
+        [ActionName("Service/Synhronize/Permissions/Part")]
+        public async Task<Model.Result> SynhronizePart(ServiceSyncPermissionRequest request,
+            [Required][FromQuery] DateTime statrtSyncTime)
+        {
+            using (var postgreBrocker = new PostgreBrocker(_configuration, _loggerFactory))
+            {
+                var task = _permissionService.SynhronizePart(
+                    postgreBrocker,
+                    request,
+                    statrtSyncTime);
+
+                return await _synhronizeService.Synhronize(
+                    postgreBrocker,
+                    ControllerContext?.RouteData?.Values["action"]?.ToString(),
+                    new { ServiceKey = request, SyncTime = statrtSyncTime },
+                    task);
+            }
+        }
+
+        [HttpPost(Name = "Service/Synhronize/Permissions/Part/Finish")]
+        [ActionName("Service/Synhronize/Permissions/Part/Finish")]
+        public async Task<Model.Result> SynhronizePartFinifsh(
+            [Required][FromQuery] string sysId,
+            [Required][FromQuery] DateTime statrtSyncTime)
+        {
+            using (var postgreBrocker = new PostgreBrocker(_configuration, _loggerFactory))
+            {
+                var task = _permissionService.SynhronizePartFinish(
+                    postgreBrocker,
+                    sysId,
+                    statrtSyncTime);
+
+                return await _synhronizeService.Synhronize(
+                    postgreBrocker,
+                    ControllerContext?.RouteData?.Values["action"]?.ToString(),
+                    new { SysId = sysId, SyncTime = statrtSyncTime },
+                    task);
             }
         }
     }

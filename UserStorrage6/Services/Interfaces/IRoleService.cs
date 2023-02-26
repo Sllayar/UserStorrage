@@ -13,5 +13,9 @@ namespace UserStorrage6.Services.Interfaces
     public interface IRoleBrockerService
     {
         Task<List<Role>?> Synhronize(IDataBrocker dataBrocker, RoleSyncRequest service, DateTime currentdate);
+
+        Task<List<Role>?> SynhronizePart(IDataBrocker dataBrocker, RoleSyncRequest service, DateTime currentdate);
+
+        Task<List<Role>?> SynhronizePartFinish(IDataBrocker dataBrocker, string serviceKey, DateTime syncDate);
     }
 }

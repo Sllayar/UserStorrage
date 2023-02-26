@@ -29,48 +29,19 @@ namespace UserStorrage6.Services
             _historryService = historryService;
         }
 
-        //public async Task<Model.Result> Synhronize(IDataBrocker dataBrocker,
-        //    string method, object service, Task<List<T>> task)
-        //{
-        //    _logger.Log(LogLevel.Information, method);
-
-        //    Model.Result result = new Model.Result();
-
-        //    try
-        //    {
-        //        int historryId = await _historryService.AddHsitorry(dataBrocker, service, method);
-
-        //        result.Data = JsonConvert.SerializeObject(await task);
-
-        //        await _historryService.UpdateHistorry(dataBrocker, historryId);
-
-        //        result.Status = "Sucsses";
-
-        //        _logger.Log(LogLevel.Information, method + " Sucsses");
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        _logger.Log(LogLevel.Error, method +
-        //            $"Fail {ex.InnerException?.Message ?? ex.Message}");
-
-        //        result.Message = ex.InnerException?.Message ?? ex.Message;
-        //        result.Status = "Error";
-        //    }
-
-        //    return result;
-        //}
-
-        public async Task<Result> Synhronize(IDataBrocker dataBrocker, string method, object service, List<T>? data)
+        public async Task<Result> Synhronize(IDataBrocker dataBrocker, string method, object service, Task<List<T>> data)
         {
             _logger.Log(LogLevel.Information, method);
 
             Model.Result result = new Model.Result();
 
+            int historryId = 0;
+
             try
             {
-                int historryId = await _historryService.AddHsitorry(dataBrocker, service, method);
+                result.Data = await data;
 
-                result.Data = JsonConvert.SerializeObject(data);
+                historryId = await _historryService.AddHsitorry(dataBrocker, service, method);
 
                 await _historryService.UpdateHistorry(dataBrocker, historryId);
 
@@ -80,6 +51,8 @@ namespace UserStorrage6.Services
             }
             catch (Exception ex)
             {
+                if(historryId == 0) await _historryService.AddHsitorry(dataBrocker, service, method);
+
                 _logger.Log(LogLevel.Error, method +
                     $"Fail {ex.InnerException?.Message ?? ex.Message}");
 

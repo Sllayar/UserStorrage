@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
+using System.ComponentModel.DataAnnotations;
+
 using UserStorrage6.Model.Context.Repository;
 using UserStorrage6.Model.DB;
 using UserStorrage6.Model.Requests.GraphQl;
@@ -35,14 +37,57 @@ namespace UserStorrage6.Controllers
         {
             using (var postgreBrocker = new PostgreBrocker(_configuration, _loggerFactory))
             {
+                var task = _roleService.Synhronize(
+                    postgreBrocker,
+                    request,
+                    statrtSyncTime == null ? DateTime.UtcNow : (DateTime)statrtSyncTime);
+
                 return await _synhronizeService.Synhronize(
                     postgreBrocker,
                     ControllerContext?.RouteData?.Values["action"]?.ToString(),
                     new { ServiceKey = request, SyncTime = statrtSyncTime },
-                    await _roleService.Synhronize(
-                        postgreBrocker,
-                        request,
-                        statrtSyncTime == null ? DateTime.UtcNow : (DateTime)statrtSyncTime));
+                    task);
+            }
+        }
+
+        [HttpPost(Name = "Service/Synhronize/Roles/Part")]
+        [ActionName("Service/Synhronize/Roles/Part")]
+        public async Task<Model.Result> SynhronizePart(RoleSyncRequest request,
+            [Required][FromQuery] DateTime statrtSyncTime)
+        {
+            using (var postgreBrocker = new PostgreBrocker(_configuration, _loggerFactory))
+            {
+                var task = _roleService.SynhronizePart(
+                    postgreBrocker,
+                    request,
+                    statrtSyncTime);
+
+                return await _synhronizeService.Synhronize(
+                    postgreBrocker,
+                    ControllerContext?.RouteData?.Values["action"]?.ToString(),
+                    new { ServiceKey = request, SyncTime = statrtSyncTime },
+                    task);
+            }
+        }
+
+        [HttpPost(Name = "Service/Synhronize/Roles/Part/Finish")]
+        [ActionName("Service/Synhronize/Roles/Part/Finish")]
+        public async Task<Model.Result> SynhronizePartFinifsh(
+            [Required][FromQuery] string sysId,
+            [Required][FromQuery] DateTime statrtSyncTime)
+        {
+            using (var postgreBrocker = new PostgreBrocker(_configuration, _loggerFactory))
+            {
+                var task = _roleService.SynhronizePartFinish(
+                    postgreBrocker,
+                    sysId,
+                    statrtSyncTime);
+
+                return await _synhronizeService.Synhronize(
+                    postgreBrocker,
+                    ControllerContext?.RouteData?.Values["action"]?.ToString(),
+                    new { SysId = sysId, SyncTime = statrtSyncTime },
+                    task);
             }
         }
     }

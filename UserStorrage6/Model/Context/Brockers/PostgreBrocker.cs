@@ -23,6 +23,8 @@ namespace UserStorrage6.Model.Context.Repository
 
         void AttachRole(Role role);
 
+        void AttachUser(User role);
+
         Task<History> GetHistoryByIdAsync(int id);
 
         Service? GetServiceByIdAsync(string key);
@@ -33,6 +35,8 @@ namespace UserStorrage6.Model.Context.Repository
         
         User? GetUser(string key, string ServiceKey);
 
+        IQueryable<User>? GetUsers(string ServiceKey);
+
         IQueryable<Permission>? GetPermissions(string key);
 
         IQueryable<Permission>? GetPermissionsFull(int serviceId);
@@ -40,6 +44,8 @@ namespace UserStorrage6.Model.Context.Repository
         IQueryable<Role>? GetRoleFull(int serviceId);
 
         IQueryable<Role>? GetRole(string key);
+
+        IQueryable<Permission>? GetPermissions(List<string> keys);
 
         Task SaveChangesAsync();
     }
@@ -53,19 +59,19 @@ namespace UserStorrage6.Model.Context.Repository
 
         public void AddHsitorryAsync(History history)
         {
-            if (Historys.Count > 0) history.Id = Historys.Max(h => h.Id) + 1;
+            history.Id = Historys.Count == 0 ? 1 : Historys.Max(h => h.Id) + 1;
             Historys.Add(history);
         }
 
         public void AddServiceAsync(Service service)
         {
-            if(Services.Count > 0)service.Id = Services.Max(s => s.Id) + 1;
+            service.Id = Services.Count == 0 ? 1 : Services.Max(h => h.Id) + 1;
             Services.Add(service);
         }
 
         public void AttachPermission(Permission permission)
         {
-            if (Permissions.Count > 0) permission.Id = Permissions.Max(p => p.Id) + 1;
+            permission.Id = Permissions.Count == 0 ? 1 : Permissions.Max(h => h.Id) + 1;
             Permissions.Add(permission);
         }
 
@@ -74,6 +80,15 @@ namespace UserStorrage6.Model.Context.Repository
             if (Roles.Count > 0)
                 role.Id = Roles.Max(r => r.Id) + 1;
             Roles.Add(role);
+        }
+
+        public void AttachUser(User user)
+        {
+            var service = Services.First(s => s.Key == user.Service.Key);
+
+            if (service.Users.Count > 0)
+                user.Id = service.Users.Max(u => u.Id) + 1;
+            service.Users.Add(user);
         }
 
         public void Dispose()
@@ -92,6 +107,11 @@ namespace UserStorrage6.Model.Context.Repository
         public IQueryable<Permission>? GetPermissions(string key)
         {
             return Permissions.AsQueryable().Where(p => p.Service.Key == key);
+        }
+
+        public IQueryable<Permission>? GetPermissions(List<string>? keys)
+        {
+            return Permissions.AsQueryable().Where(p => keys.FirstOrDefault(p.SysId) != null);
         }
 
         public IQueryable<Permission>? GetPermissionsFull(int serviceId)
@@ -127,6 +147,11 @@ namespace UserStorrage6.Model.Context.Repository
         public User? GetUser(string key, string ServiceKey)
         {
             return Services.FirstOrDefault(s => s.Key == ServiceKey).Users.FirstOrDefault(u => u.SysId == key);
+        }
+
+        public IQueryable<User>? GetUsers(string ServiceKey)
+        {
+            return Services.FirstOrDefault(s => s.Key == ServiceKey).Users.AsQueryable();
         }
 
         public async Task SaveChangesAsync()
@@ -169,6 +194,7 @@ namespace UserStorrage6.Model.Context.Repository
         public IQueryable<Role> GetRole(string key)
         {
             return _applicationDbContext.Roles
+                .Include(r => r.SysPermitions)
                 .Where(r => r.Service.Key == key);
         }
 
@@ -191,6 +217,15 @@ namespace UserStorrage6.Model.Context.Repository
                 .FirstOrDefault(u => u.SysId == key && u.Service.Key == ServiceKey);
         }
 
+        public IQueryable<User>? GetUsers(string ServiceKey)
+        {
+            return _applicationDbContext.Users
+                .Include(u => u.Roles)
+                .Include(u => u.Permissions)
+                .Include(u => u.Service)
+                .Where(u => u.Service.Key == ServiceKey);
+        }
+
         public Service? GetServiceWithUser(int serviceId)
         {
             return _applicationDbContext.Services
@@ -203,6 +238,11 @@ namespace UserStorrage6.Model.Context.Repository
             return _applicationDbContext.Services
                 .Include(r => r.Users)
                 .FirstOrDefault(s => s.Key == key);
+        }
+
+        public void AttachUser(User user)
+        {
+            _applicationDbContext.Users.Attach(user);
         }
 
         public void AttachRole(Role role)
@@ -240,6 +280,12 @@ namespace UserStorrage6.Model.Context.Repository
         {
             return _applicationDbContext.Services
                 .FirstOrDefault(dbService => dbService.Key == key);
+        }
+
+        public IQueryable<Permission>? GetPermissions(List<string>? keys)
+        {
+            return _applicationDbContext.Permissions.AsQueryable().Where(p => 
+                keys.FirstOrDefault(p.SysId) != null);
         }
     }
 }
