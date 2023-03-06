@@ -9,6 +9,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace UserStorrage6.Controllers
 {
+#if DEBUG
     [Route("[action]")]
     [ApiController]
     public class TestController : Controller
@@ -172,4 +173,5 @@ namespace UserStorrage6.Controllers
                 startSyncTime == null ? DateTime.UtcNow : (DateTime)startSyncTime);
         }
     }
+#endif
 }
