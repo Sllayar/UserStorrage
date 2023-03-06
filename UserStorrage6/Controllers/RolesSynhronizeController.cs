@@ -33,19 +33,19 @@ namespace UserStorrage6.Controllers
         [HttpPost(Name = "Service/Synhronize/Roles")]
         [ActionName("Service/Synhronize/Roles")]
         public async Task<Model.Result> Synhronize(RoleSyncRequest request,
-            [FromQuery] DateTime? statrtSyncTime)
+            [FromQuery] DateTime? startSyncTime)
         {
             using (var postgreBrocker = new PostgreBrocker(_configuration, _loggerFactory))
             {
                 var task = _roleService.Synhronize(
                     postgreBrocker,
                     request,
-                    statrtSyncTime == null ? DateTime.UtcNow : (DateTime)statrtSyncTime);
+                    startSyncTime == null ? DateTime.UtcNow : (DateTime)startSyncTime);
 
                 return await _synhronizeService.Synhronize(
                     postgreBrocker,
                     ControllerContext?.RouteData?.Values["action"]?.ToString(),
-                    new { ServiceKey = request, SyncTime = statrtSyncTime },
+                    new { ServiceKey = request, SyncTime = startSyncTime },
                     task);
             }
         }
@@ -53,19 +53,19 @@ namespace UserStorrage6.Controllers
         [HttpPost(Name = "Service/Synhronize/Roles/Part")]
         [ActionName("Service/Synhronize/Roles/Part")]
         public async Task<Model.Result> SynhronizePart(RoleSyncRequest request,
-            [Required][FromQuery] DateTime statrtSyncTime)
+            [Required][FromQuery] DateTime startSyncTime)
         {
             using (var postgreBrocker = new PostgreBrocker(_configuration, _loggerFactory))
             {
                 var task = _roleService.SynhronizePart(
                     postgreBrocker,
                     request,
-                    statrtSyncTime);
+                    startSyncTime);
 
                 return await _synhronizeService.Synhronize(
                     postgreBrocker,
                     ControllerContext?.RouteData?.Values["action"]?.ToString(),
-                    new { ServiceKey = request, SyncTime = statrtSyncTime },
+                    new { ServiceKey = request, SyncTime = startSyncTime },
                     task);
             }
         }
@@ -74,19 +74,19 @@ namespace UserStorrage6.Controllers
         [ActionName("Service/Synhronize/Roles/Part/Finish")]
         public async Task<Model.Result> SynhronizePartFinifsh(
             [Required][FromQuery] string sysId,
-            [Required][FromQuery] DateTime statrtSyncTime)
+            [Required][FromQuery] DateTime startSyncTime)
         {
             using (var postgreBrocker = new PostgreBrocker(_configuration, _loggerFactory))
             {
                 var task = _roleService.SynhronizePartFinish(
                     postgreBrocker,
                     sysId,
-                    statrtSyncTime);
+                    startSyncTime);
 
                 return await _synhronizeService.Synhronize(
                     postgreBrocker,
                     ControllerContext?.RouteData?.Values["action"]?.ToString(),
-                    new { SysId = sysId, SyncTime = statrtSyncTime },
+                    new { SysId = sysId, SyncTime = startSyncTime },
                     task);
             }
         }

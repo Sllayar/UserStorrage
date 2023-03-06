@@ -13,7 +13,8 @@ namespace UserStorrage6.GraphQl.Query
             [Service] ApplicationDbContext applicationDbContext) =>
                 applicationDbContext.Roles;
 
-        [UsePaging(IncludeTotalCount = true)]
+        [UsePaging(IncludeTotalCount = true, MaxPageSize = 1000)]
+        [UseProjection]
         [UseFiltering]
         [UseSorting]
         public IQueryable<Role> GetRolePaging(

@@ -36,18 +36,18 @@ namespace UserStorrage6.Controllers
         [ActionName("Synhronize/Service/User/Part")]
         public async Task<Model.Result> PartServiceSinhronize(
             ServiceSyncUserRequest service,
-            [Required][FromQuery] DateTime statrtSyncTime)
+            [Required][FromQuery] DateTime startSyncTime)
         {
             using (var postgreBrocker = new PostgreBrocker(_configuration, _loggerFactory))
             {
                 var res = _userBrockerService.PartSinhronize(
                         postgreBrocker, service,
-                        statrtSyncTime == null ? DateTime.UtcNow : (DateTime)statrtSyncTime);
+                        startSyncTime == null ? DateTime.UtcNow : (DateTime)startSyncTime);
 
                 return await _synhronizeService.Synhronize(
                     postgreBrocker,
                     ControllerContext?.RouteData?.Values["action"]?.ToString(),
-                    new { Service = service, SyncTime = statrtSyncTime },
+                    new { Service = service, SyncTime = startSyncTime },
                     res);
             }
         }
@@ -56,16 +56,16 @@ namespace UserStorrage6.Controllers
         [ActionName("Synhronize/Service/User/Part/Finish")]
         public async Task<Model.Result> DeleteNotUpdatedUsers(
             [Required][FromQuery] string serviceKey,
-            [Required][FromQuery] DateTime statrtSyncTime)
+            [Required][FromQuery] DateTime startSyncTime)
         {
             using (var postgreBrocker = new PostgreBrocker(_configuration, _loggerFactory))
             {
-                var res = _userBrockerService.DeleteNotUpdatedUsers(postgreBrocker, serviceKey, statrtSyncTime);
+                var res = _userBrockerService.DeleteNotUpdatedUsers(postgreBrocker, serviceKey, startSyncTime);
 
                 return await _synhronizeService.Synhronize(
                     postgreBrocker,
                     ControllerContext?.RouteData?.Values["action"]?.ToString(),
-                    new { ServiceKey = serviceKey, SyncTime = statrtSyncTime },
+                    new { ServiceKey = serviceKey, SyncTime = startSyncTime },
                     res);
             }
         }

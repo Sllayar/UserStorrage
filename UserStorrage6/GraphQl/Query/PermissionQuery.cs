@@ -13,7 +13,8 @@ namespace UserStorrage6.GraphQl.Query
             [Service] ApplicationDbContext applicationDbContext) =>
                 applicationDbContext.Permissions;
 
-        [UsePaging(IncludeTotalCount = true)]
+        [UsePaging(IncludeTotalCount = true, MaxPageSize = 1000)]
+        [UseProjection]
         [UseFiltering]
         [UseSorting]
         public IQueryable<Permission> GetPermissionPaging(

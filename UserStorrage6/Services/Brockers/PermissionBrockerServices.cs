@@ -120,7 +120,7 @@ namespace UserStorrage6.Services.Brockers
             return result;
         }
 
-        public Permission TryUpdatePermission(Permission permission,
+        public Permission TryUpdatePermission(Permission permission, 
             PermissionShort newPermission, DateTime currentdate, DateTime syncTime)
         {
             permission.SyncAt = currentdate.ToUniversalTime();
@@ -142,6 +142,8 @@ namespace UserStorrage6.Services.Brockers
 
             permission.Users?.ForEach(u =>
                 u.UpdateAt = currentdate.ToUniversalTime());
+            foreach (var role in permission.Roles) 
+                role.UpdateAt = currentdate.ToUniversalTime();
 
             return permission;
         }

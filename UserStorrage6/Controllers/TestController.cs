@@ -83,56 +83,56 @@ namespace UserStorrage6.Controllers
         [ActionName("Test/Synhronize/Service/User/Part")]
         public async Task<List<User>?> PartServiceSinhronize(
             [Required] ServiceSyncUserRequest service,
-            [Required][FromQuery] DateTime statrtSyncTime)
+            [Required][FromQuery] DateTime startSyncTime)
         {
             return await _userBrockerService.PartSinhronize(
                     _testBrocker, service,
-                    statrtSyncTime == null ? DateTime.UtcNow : (DateTime)statrtSyncTime);
+                    startSyncTime == null ? DateTime.UtcNow : (DateTime)startSyncTime);
         }
 
         [HttpPost(Name = "Test/Synhronize/Service/User/Part/Finish")]
         [ActionName("Test/Synhronize/Service/User/Part/Finish")]
         public async Task<List<User>?> DeleteNotUpdatedUsers(
             [Required][FromQuery] string serviceKey,
-            [Required][FromQuery] DateTime statrtSyncTime)
+            [Required][FromQuery] DateTime startSyncTime)
         {
-            return await _userBrockerService.DeleteNotUpdatedUsers(_testBrocker, serviceKey, statrtSyncTime);
+            return await _userBrockerService.DeleteNotUpdatedUsers(_testBrocker, serviceKey, startSyncTime);
         }
 
         [HttpPost(Name = "Test/Service/Synhronize/Permissions")]
         [ActionName("Test/Service/Synhronize/Permissions")]
         public async Task<List<Permission>?> Synhronize(
             [Required] ServiceSyncPermissionRequest request,
-            [FromQuery] DateTime? statrtSyncTime)
+            [FromQuery] DateTime? startSyncTime)
         {
             return await _permissionService.Synhronize(
                 _testBrocker,
                 request,
-                statrtSyncTime == null ? DateTime.UtcNow : (DateTime)statrtSyncTime);
+                startSyncTime == null ? DateTime.UtcNow : (DateTime)startSyncTime);
         }
 
         [HttpPost(Name = "Test/Service/Synhronize/Permissions/Part")]
         [ActionName("Test/Service/Synhronize/Permissions/Part")]
         public async Task<List<Permission>?> SynhronizePermissionsPart(
             [Required] ServiceSyncPermissionRequest request,
-            [FromQuery][Required] DateTime? statrtSyncTime)
+            [FromQuery][Required] DateTime? startSyncTime)
         {
             return await _permissionService.SynhronizePart(
                 _testBrocker,
                 request,
-                statrtSyncTime == null ? DateTime.UtcNow : (DateTime)statrtSyncTime);
+                startSyncTime == null ? DateTime.UtcNow : (DateTime)startSyncTime);
         }
 
         [HttpPost(Name = "Test/Service/Synhronize/Permissions/Part/Finish")]
         [ActionName("Test/Service/Synhronize/Permissions/Part/Finish")]
         public async Task<List<Permission>?> SynhronizePermissionsPartFinish(
             [FromQuery][Required] string serviceKey,
-            [FromQuery][Required] DateTime? statrtSyncTime)
+            [FromQuery][Required] DateTime? startSyncTime)
         {
             return await _permissionService.SynhronizePartFinish(
                 _testBrocker,
                 serviceKey,
-                statrtSyncTime == null ? DateTime.UtcNow : (DateTime)statrtSyncTime);
+                startSyncTime == null ? DateTime.UtcNow : (DateTime)startSyncTime);
         }
 
 
@@ -140,36 +140,36 @@ namespace UserStorrage6.Controllers
         [ActionName("Test/Service/Synhronize/Roles")]
         public async Task<List<Role>?> Synhronize(
             [Required] RoleSyncRequest request,
-            [FromQuery] DateTime? statrtSyncTime)
+            [FromQuery] DateTime? startSyncTime)
         {
             return await _roleService.Synhronize(
                 _testBrocker,
                 request,
-                statrtSyncTime == null ? DateTime.UtcNow : (DateTime)statrtSyncTime);
+                startSyncTime == null ? DateTime.UtcNow : (DateTime)startSyncTime);
         }
 
         [HttpPost(Name = "Test/Service/Synhronize/Roles/Part")]
         [ActionName("Test/Service/Synhronize/Roles/Part")]
         public async Task<List<Role>?> SynhronizeRolePart(
             [Required] RoleSyncRequest request,
-            [FromQuery][Required] DateTime? statrtSyncTime)
+            [FromQuery][Required] DateTime? startSyncTime)
         {
             return await _roleService.SynhronizePart(
                 _testBrocker,
                 request,
-                statrtSyncTime == null ? DateTime.UtcNow : (DateTime)statrtSyncTime);
+                startSyncTime == null ? DateTime.UtcNow : (DateTime)startSyncTime);
         }
 
         [HttpPost(Name = "Test/Service/Synhronize/Roles/Part/Finish")]
         [ActionName("Test/Service/Synhronize/Roles/Part/Finish")]
         public async Task<List<Role>?> SynhronizeRolePartFinish(
-            [FromQuery][Required] DateTime? statrtSyncTime,
+            [FromQuery][Required] DateTime? startSyncTime,
             [FromQuery][Required] string serviceKey)
         {
             return await _roleService.SynhronizePartFinish(
                 _testBrocker,
                 serviceKey,
-                statrtSyncTime == null ? DateTime.UtcNow : (DateTime)statrtSyncTime);
+                startSyncTime == null ? DateTime.UtcNow : (DateTime)startSyncTime);
         }
     }
 }

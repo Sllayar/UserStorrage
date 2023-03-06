@@ -41,7 +41,7 @@ namespace UserStorrage6.Services.Brockers
                     .FirstOrDefault(u => u.SysId == user.SysId);
 
                 if (currentUser == null)
-                    AddNewUser(dataBrocker, updatedService, permissions, roles, user, currentDate, currentDate);
+                    AddNewUser(dataBrocker, updatedService, permissions, roles, user, currentDate, syncDate);
                 else 
                     UpdateUser(permissions, roles, currentUser, user, currentDate, syncDate);
             }
@@ -147,7 +147,7 @@ namespace UserStorrage6.Services.Brockers
         private void UpdateUser(List<Permission> permissions, List<Role> roles, User currentUser, UserShort user,
             DateTime currentdate, DateTime syncTime)
         {
-            currentUser.SyncAt = syncTime.ToUniversalTime();
+            currentUser.SyncAt = currentdate.ToUniversalTime();
 
             var delPermissions = currentUser.Permissions.Select(s => s.SysId).Except(user.Permissions).ToList();
             var delRole = currentUser.Roles.Select(s => s.SysId).Except(user.Roles).ToList();
@@ -178,46 +178,21 @@ namespace UserStorrage6.Services.Brockers
             delRole.ForEach(r =>
                 currentUser.Roles.Remove(roles.Find(r1 => r1.SysId == r)));
 
-            //foreach (var p in user.Permissions)
-            //{
-            //    if (currentUser.Permissions.FirstOrDefault(p1 => p1.SysId == p) == null)
-            //        currentUser.Permissions.Add(permissions.FirstOrDefault(p1 => p1.SysId == p));
-            //}
-
-            //var delPermissions = currentUser.Permissions.Select(s => s.SysId).Except(user.Permissions);
-            //currentUser.Permissions.RemoveAll(p => delPermissions.FirstOrDefault(dp => dp == p.SysId) != null);
-
-            //foreach (var r in user.Roles)
-            //{
-            //    if (currentUser.Roles.FirstOrDefault(r1 => r1.SysId == r) == null)
-            //        currentUser.Roles.Add(roles.FirstOrDefault(r1 => r1.SysId == r));
-            //}
-
-            //var delRole = currentUser.Roles.Select(s => s.SysId).Except(user.Roles);
-            //currentUser.Roles.RemoveAll(p => delRole.FirstOrDefault(dp => dp == p.SysId) != null);
-
-            //foreach (var r in currentUser.Roles.Select(s => s.SysId).Except(user.Roles))
-            //{
-            //    currentUser.Roles
-            //        .Remove(currentUser.Roles
-            //            .FirstOrDefault(per => per.SysId == r));
-            //}
-
             currentUser.Comment = user.Comment;
             currentUser.OwnerLogin = user.OwnerLogin;
             currentUser.Status = user.Status;
             currentUser.SysLogin = user.SysLogin;
             currentUser.Type = user.Type;
-            currentUser.UpdateAt = currentdate.ToUniversalTime();
+            currentUser.UpdateAt = syncTime.ToUniversalTime();
         }
 
         private User? AddNewUser(IDataBrocker dataBrocker, Service service, List<Permission> permissions,
             List<Role> roles, UserShort user, DateTime currentdate, DateTime syncTime)
         {
             var newUser = _mapper.Map<User>(user);
-            newUser.UpdateAt = currentdate.ToUniversalTime();
             newUser.CreateAT = currentdate.ToUniversalTime();
-            newUser.SyncAt = syncTime.ToUniversalTime();
+            newUser.SyncAt = currentdate.ToUniversalTime();
+            newUser.UpdateAt = syncTime.ToUniversalTime();
 
             newUser.Service = service;
 

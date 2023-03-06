@@ -142,11 +142,7 @@ namespace UserStorrage6.Services.Brockers
                 role.Description == roleShort.Description &&
                 role.Status == roleShort.Status &&
                 role.IsNeedAprove == roleShort.IsNeedAprove &&
-                role.Comment == roleShort.Comment &&
-
-                (permissions == null ||
-                permissions.Count(p =>
-                    p.UpdateAt.ToUniversalTime() == currentDate.ToUniversalTime()) != 0))
+                role.Comment == roleShort.Comment)
                 return role;
 
             role.Service = service;
