@@ -40,7 +40,7 @@ namespace UserStorrage6.Model.DB
 
         public DateTime SyncAt { get; set; } = DateTime.UtcNow;
 
-        public virtual ICollection<Permission> SysPermitions { get; set; } = new List<Permission>();
+        public virtual ICollection<Permission> SysPermissions { get; set; } = new List<Permission>();
 
 
         [IgnoreDataMember]

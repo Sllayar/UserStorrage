@@ -147,7 +147,7 @@ namespace UserStorrage6.Services.Brockers
 
             role.Service = service;
 
-            role.SysPermitions = permissions;
+            role.SysPermissions = permissions;
 
             role.UpdateAt = syncTime.ToUniversalTime();
 
@@ -169,7 +169,7 @@ namespace UserStorrage6.Services.Brockers
             var role = _mapper.Map<Role>(roleShort);
 
             role.Service = serviceKey;
-            role.SysPermitions = permissions;
+            role.SysPermissions = permissions;
 
             role.UpdateAt = syncTime.ToUniversalTime();
             role.CreateAT = currentdate.ToUniversalTime();

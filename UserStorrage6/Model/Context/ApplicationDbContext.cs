@@ -34,7 +34,7 @@ namespace UsersStorrage.Models.Context
             _connectionString = configuration.GetValue<string>("USER_DB");
 #endif
             if (string.IsNullOrEmpty(_connectionString))
-                _connectionString = "Host=127.0.0.1;Port=5432;Database=DebugUserStorrage;Username=User;Password=12345678";
+                _connectionString = "Host=127.0.0.1;Port=5432;Database=DebugUserStorrage3;Username=User;Password=12345678";
             _LoggerFactory = loggerFactory;
 
             Database.EnsureCreated();
@@ -51,7 +51,7 @@ namespace UsersStorrage.Models.Context
             _connectionString = configuration.GetValue<string>("USER_DB");
 #endif
             if (string.IsNullOrEmpty(_connectionString))
-                _connectionString = "Host=127.0.0.1;Port=5432;Database=DebugUserStorrage;Username=User;Password=12345678";
+                _connectionString = "Host=127.0.0.1;Port=5432;Database=DebugUserStorrage3;Username=User;Password=12345678";
             _LoggerFactory = loggerFactory;
 
             Database.EnsureCreated();
@@ -77,7 +77,7 @@ namespace UsersStorrage.Models.Context
                 .WithMany(s => s.Users);
 
             modelBuilder.Entity<Role>()
-                .HasMany(c => c.SysPermitions)
+                .HasMany(c => c.SysPermissions)
                 .WithMany(s => s.Roles);
         }
 
