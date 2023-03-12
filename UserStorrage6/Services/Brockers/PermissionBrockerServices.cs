@@ -97,9 +97,9 @@ namespace UserStorrage6.Services.Brockers
         }
 
         public async Task<List<Permission>?> Synhronize(IDataBrocker dataBrocker,
-            List<PermissionShort>? permitions, Service service, DateTime currentDate, DateTime syncTime)
+            List<PermissionShort>? permissions, Service service, DateTime currentDate, DateTime syncTime)
         {
-            if (permitions == null || permitions.Count == 0) return new List<Permission>();
+            if (permissions == null || permissions.Count == 0) return new List<Permission>();
 
             var existPermissions = dataBrocker
                 .GetPermissionsFull(service.Id)
@@ -107,7 +107,7 @@ namespace UserStorrage6.Services.Brockers
 
             var result = new List<Permission>();
 
-            foreach (var permission in permitions)
+            foreach (var permission in permissions)
             {
                 var curentPermissions = existPermissions?.FirstOrDefault(p => p.SysId == permission.SysId);
 

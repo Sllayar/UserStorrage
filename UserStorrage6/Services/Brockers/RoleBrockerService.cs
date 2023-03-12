@@ -47,7 +47,7 @@ namespace UserStorrage6.Services.Brockers
                 var existPermissions = dataBrocker
                     .GetPermissionsFull(updatedService.Id)
                     .ToList()
-                    .Where(p => !string.IsNullOrEmpty(newRole.Permitions.Find(n => n.Equals(p.SysId))))
+                    .Where(p => !string.IsNullOrEmpty(newRole.Permissions.Find(n => n.Equals(p.SysId))))
                     .ToList();
 
                 if (role == null) AddNewRole(dataBrocker, updatedService, newRole, existPermissions, currentDate, currentdate);
@@ -104,7 +104,7 @@ namespace UserStorrage6.Services.Brockers
                 var existPermissions = dataBrocker
                     .GetPermissionsFull(updatedService.Id)
                     .ToList()
-                    .Where(p => !string.IsNullOrEmpty(newRole.Permitions.Find(n => n.Equals(p.SysId))))
+                    .Where(p => !string.IsNullOrEmpty(newRole.Permissions.Find(n => n.Equals(p.SysId))))
                     .ToList();
 
                 if (role == null) AddNewRole(dataBrocker, updatedService, newRole, existPermissions, currentDate, syncDate);
@@ -129,7 +129,7 @@ namespace UserStorrage6.Services.Brockers
         private void CheckForExist(List<Permission> permissions, List<RoleShort> roleShorts)
         {
             foreach (var role in roleShorts)
-                if(role.Permitions.Except(permissions.Select(p => p.SysId)).Count() > 0)
+                if(role.Permissions.Except(permissions.Select(p => p.SysId)).Count() > 0)
                     throw new Exception($"Обнаружена попытка добавить несуществующее право.");
         }
 

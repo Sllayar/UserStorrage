@@ -25,6 +25,6 @@ namespace UserStorrage6.Model.Requests.Short
 
         public string? Comment { get; set; }
 
-        public virtual List<string>? Permitions { get; set; }
+        public virtual List<string>? Permissions { get; set; }
     }
 }

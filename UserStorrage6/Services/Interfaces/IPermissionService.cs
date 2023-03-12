@@ -10,7 +10,7 @@ namespace UserStorrage6.Services.Interfaces
     {
         Task<List<Permission>?> Synhronize(ServiceSyncPermissionRequest service, DateTime currentdate);
 
-        //Task<List<Permission>?> Synhronize(List<PermissionShort>? Permitions, Service service, DateTime currentdate, DateTime syncTime);
+        //Task<List<Permission>?> Synhronize(List<PermissionShort>? Permissions, Service service, DateTime currentdate, DateTime syncTime);
 
         //Task<List<Permission>?> Synhronize(RoleSyncRequest roleSyncRequest, DateTime currentDate, DateTime syncTime);
 
@@ -25,7 +25,7 @@ namespace UserStorrage6.Services.Interfaces
     {
         Task<List<Permission>?> Synhronize(IDataBrocker dataBrocker, ServiceSyncPermissionRequest service, DateTime currentdate);
 
-        Task<List<Permission>?> Synhronize(IDataBrocker dataBrocker, List<PermissionShort>? Permitions, Service service, DateTime currentdate, DateTime syncTime);
+        Task<List<Permission>?> Synhronize(IDataBrocker dataBrocker, List<PermissionShort>? Permissions, Service service, DateTime currentdate, DateTime syncTime);
 
         Task<List<Permission>?> SynhronizePart(IDataBrocker dataBrocker, ServiceSyncPermissionRequest service, DateTime currentdate);
 
