@@ -24,15 +24,15 @@ namespace UserStorrage6.Migrations
 
             modelBuilder.Entity("PermissionRole", b =>
                 {
+                    b.Property<int>("PermissionsId")
+                        .HasColumnType("integer");
+
                     b.Property<int>("RolesId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("SysPermitionsId")
-                        .HasColumnType("integer");
+                    b.HasKey("PermissionsId", "RolesId");
 
-                    b.HasKey("RolesId", "SysPermitionsId");
-
-                    b.HasIndex("SysPermitionsId");
+                    b.HasIndex("RolesId");
 
                     b.ToTable("PermissionRole");
                 });
@@ -121,6 +121,9 @@ namespace UserStorrage6.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<DateTime>("PartSyncAt")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("ServiceKey")
                         .IsRequired()
                         .HasColumnType("text");
@@ -172,6 +175,9 @@ namespace UserStorrage6.Migrations
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<DateTime>("PartSyncAt")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("ServiceKey")
                         .IsRequired()
@@ -245,6 +251,9 @@ namespace UserStorrage6.Migrations
                     b.Property<string>("OwnerLogin")
                         .HasColumnType("text");
 
+                    b.Property<DateTime>("PartSyncAt")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("ServiceKey")
                         .IsRequired()
                         .HasColumnType("text");
@@ -280,15 +289,15 @@ namespace UserStorrage6.Migrations
 
             modelBuilder.Entity("PermissionRole", b =>
                 {
-                    b.HasOne("UserStorrage6.Model.DB.Role", null)
+                    b.HasOne("UserStorrage6.Model.DB.Permission", null)
                         .WithMany()
-                        .HasForeignKey("RolesId")
+                        .HasForeignKey("PermissionsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("UserStorrage6.Model.DB.Permission", null)
+                    b.HasOne("UserStorrage6.Model.DB.Role", null)
                         .WithMany()
-                        .HasForeignKey("SysPermitionsId")
+                        .HasForeignKey("RolesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

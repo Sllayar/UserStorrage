@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace UserStorrage6.Migrations
 {
     /// <inheritdoc />
-    public partial class AddBlogCreatedTimestamp : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -61,7 +61,8 @@ namespace UserStorrage6.Migrations
                     Comment = table.Column<string>(type: "text", nullable: true),
                     CreateAT = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     UpdateAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    SyncAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    SyncAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    PartSyncAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -90,7 +91,8 @@ namespace UserStorrage6.Migrations
                     Comment = table.Column<string>(type: "text", nullable: true),
                     CreateAT = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     UpdateAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    SyncAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    SyncAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    PartSyncAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -119,7 +121,8 @@ namespace UserStorrage6.Migrations
                     Comment = table.Column<string>(type: "text", nullable: true),
                     CreateAT = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     UpdateAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    SyncAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    SyncAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    PartSyncAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -137,15 +140,15 @@ namespace UserStorrage6.Migrations
                 name: "PermissionRole",
                 columns: table => new
                 {
-                    RolesId = table.Column<int>(type: "integer", nullable: false),
-                    SysPermitionsId = table.Column<int>(type: "integer", nullable: false)
+                    PermissionsId = table.Column<int>(type: "integer", nullable: false),
+                    RolesId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PermissionRole", x => new { x.RolesId, x.SysPermitionsId });
+                    table.PrimaryKey("PK_PermissionRole", x => new { x.PermissionsId, x.RolesId });
                     table.ForeignKey(
-                        name: "FK_PermissionRole_Permissions_SysPermitionsId",
-                        column: x => x.SysPermitionsId,
+                        name: "FK_PermissionRole_Permissions_PermissionsId",
+                        column: x => x.PermissionsId,
                         principalTable: "Permissions",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -206,9 +209,9 @@ namespace UserStorrage6.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_PermissionRole_SysPermitionsId",
+                name: "IX_PermissionRole_RolesId",
                 table: "PermissionRole",
-                column: "SysPermitionsId");
+                column: "RolesId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Permissions_ServiceKey",

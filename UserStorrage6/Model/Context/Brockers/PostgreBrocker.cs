@@ -194,7 +194,7 @@ namespace UserStorrage6.Model.Context.Repository
         public IQueryable<Role> GetRole(string key)
         {
             return _applicationDbContext.Roles
-                .Include(r => r.SysPermissions)
+                .Include(r => r.Permissions)
                 .Where(r => r.Service.Key == key);
         }
 
@@ -202,7 +202,7 @@ namespace UserStorrage6.Model.Context.Repository
         {
             return _applicationDbContext.Roles
                 .Include(r => r.Users)
-                .Include(r => r.SysPermissions)
+                .Include(r => r.Permissions)
                 .Include(r => r.Service)
                 .Where(r => r.Service.Id == serviceId);
         }

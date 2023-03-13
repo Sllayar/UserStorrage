@@ -52,7 +52,7 @@ namespace UserStorrage6.Services.Brockers
 
             foreach (var Permission in Permissions)
             {
-                if (Permission.UpdateAt != syncDate.ToUniversalTime() && 
+                if (Permission.PartSyncAt != syncDate.ToUniversalTime() && 
                     Permission.Status != Status.Delete)
                 {
                     Permission.Status = Status.Delete;
@@ -124,6 +124,7 @@ namespace UserStorrage6.Services.Brockers
             PermissionShort newPermission, DateTime currentdate, DateTime syncTime)
         {
             permission.SyncAt = currentdate.ToUniversalTime();
+            permission.PartSyncAt = syncTime.ToUniversalTime();
 
             if (permission.Name == newPermission.Name &&
                 permission.Description == newPermission.Description &&
@@ -158,6 +159,7 @@ namespace UserStorrage6.Services.Brockers
             permission.UpdateAt = syncTime.ToUniversalTime();
             permission.CreateAT = currentdate.ToUniversalTime();
             permission.SyncAt = currentdate.ToUniversalTime();
+            permission.PartSyncAt = syncTime.ToUniversalTime();
 
             dataBrocker.AttachPermission(permission);
 

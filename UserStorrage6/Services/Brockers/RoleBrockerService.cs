@@ -70,7 +70,7 @@ namespace UserStorrage6.Services.Brockers
 
             foreach (var role in roles)
             {
-                if (role.UpdateAt != syncDate.ToUniversalTime() && 
+                if (role.PartSyncAt != syncDate.ToUniversalTime() && 
                     (role != null || role.Status != Status.Delete))
                 {
                     role.Status = Status.Delete;
@@ -137,6 +137,7 @@ namespace UserStorrage6.Services.Brockers
             Service service, List<Permission>? permissions, DateTime currentDate, DateTime syncTime)
         {
             role.SyncAt = currentDate.ToUniversalTime();
+            role.PartSyncAt = currentDate.ToUniversalTime();
 
             if (role.Name == roleShort.Name &&
                 role.Description == roleShort.Description &&
@@ -147,7 +148,7 @@ namespace UserStorrage6.Services.Brockers
 
             role.Service = service;
 
-            role.SysPermissions = permissions;
+            role.Permissions = permissions;
 
             role.UpdateAt = syncTime.ToUniversalTime();
 
@@ -169,11 +170,12 @@ namespace UserStorrage6.Services.Brockers
             var role = _mapper.Map<Role>(roleShort);
 
             role.Service = serviceKey;
-            role.SysPermissions = permissions;
+            role.Permissions = permissions;
 
             role.UpdateAt = syncTime.ToUniversalTime();
             role.CreateAT = currentdate.ToUniversalTime();
             role.SyncAt = currentdate.ToUniversalTime();
+            role.PartSyncAt = currentdate.ToUniversalTime();
 
             dataBrocker.AttachRole(role);
 

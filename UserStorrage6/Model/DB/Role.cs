@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -40,7 +42,10 @@ namespace UserStorrage6.Model.DB
 
         public DateTime SyncAt { get; set; } = DateTime.UtcNow;
 
-        public virtual ICollection<Permission> SysPermissions { get; set; } = new List<Permission>();
+        [JsonIgnore]
+        public DateTime PartSyncAt { get; set; } = DateTime.UtcNow;
+
+        public virtual ICollection<Permission> Permissions { get; set; } = new List<Permission>();
 
 
         [IgnoreDataMember]

@@ -54,8 +54,7 @@ namespace UserStorrage6.Services.Brockers
             await dataBrocker.SaveChangesAsync();
 
             return dataBrocker.GetServiceWithUser(updatedService.Id).Users?
-                .Where(u =>
-                    service.Users.Exists(user => user.SysId == u.SysId))
+                .Where(u => service.Users.Exists(user => user.SysId == u.SysId))
                 .ToList();
         }
 
@@ -65,7 +64,7 @@ namespace UserStorrage6.Services.Brockers
             var currentService = dataBrocker.GetServiceWithUser(serviceKey);
 
             var exceptUsers = currentService?.Users?
-               .Where(u => u.SyncAt != syncDate.ToUniversalTime())
+               .Where(u => u.PartSyncAt != syncDate.ToUniversalTime())
                .Select(s => s.SysId)
                .ToList();
 
@@ -148,6 +147,7 @@ namespace UserStorrage6.Services.Brockers
             DateTime currentdate, DateTime syncTime)
         {
             currentUser.SyncAt = currentdate.ToUniversalTime();
+            currentUser.PartSyncAt = currentdate.ToUniversalTime();
 
             var delPermissions = currentUser.Permissions.Select(s => s.SysId).Except(user.Permissions).ToList();
             var delRole = currentUser.Roles.Select(s => s.SysId).Except(user.Roles).ToList();
@@ -193,6 +193,7 @@ namespace UserStorrage6.Services.Brockers
             newUser.CreateAT = currentdate.ToUniversalTime();
             newUser.SyncAt = currentdate.ToUniversalTime();
             newUser.UpdateAt = syncTime.ToUniversalTime();
+            newUser.PartSyncAt = syncTime.ToUniversalTime();
 
             newUser.Service = service;
 
