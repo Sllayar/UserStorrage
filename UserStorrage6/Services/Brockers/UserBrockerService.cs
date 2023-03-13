@@ -140,6 +140,7 @@ namespace UserStorrage6.Services.Brockers
                 curUser.Status = Status.Delete;
                 curUser.SyncAt = syncTime.ToUniversalTime();
                 curUser.UpdateAt = currentdate.ToUniversalTime();
+                curUser.PartSyncAt = syncTime.ToUniversalTime();
             }
         }
 
@@ -147,7 +148,7 @@ namespace UserStorrage6.Services.Brockers
             DateTime currentdate, DateTime syncTime)
         {
             currentUser.SyncAt = currentdate.ToUniversalTime();
-            currentUser.PartSyncAt = currentdate.ToUniversalTime();
+            currentUser.PartSyncAt = syncTime.ToUniversalTime();
 
             var delPermissions = currentUser.Permissions.Select(s => s.SysId).Except(user.Permissions).ToList();
             var delRole = currentUser.Roles.Select(s => s.SysId).Except(user.Roles).ToList();

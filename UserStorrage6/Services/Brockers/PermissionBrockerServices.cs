@@ -46,8 +46,11 @@ namespace UserStorrage6.Services.Brockers
             return dataBrocker.GetPermissionsFull(updatedService.Id).ToList();
         }
 
-        public async Task<List<Permission>?> SynhronizePartFinish(IDataBrocker dataBrocker, string serviceKey, DateTime syncDate)
+        public async Task<List<Permission>?> SynhronizePartFinish(
+            IDataBrocker dataBrocker,string serviceKey, DateTime syncDate)
         {
+            var currentdate = DateTime.Now;
+
             var Permissions = dataBrocker.GetPermissions(serviceKey).ToList();
 
             foreach (var Permission in Permissions)
@@ -56,8 +59,20 @@ namespace UserStorrage6.Services.Brockers
                     Permission.Status != Status.Delete)
                 {
                     Permission.Status = Status.Delete;
-                    Permission.SyncAt = DateTime.Now.ToUniversalTime();
+                    Permission.SyncAt = currentdate.ToUniversalTime();
                     Permission.UpdateAt = syncDate.ToUniversalTime();
+
+                    Permission.Users?.ForEach(u =>
+                    {
+                        u.UpdateAt = syncDate.ToUniversalTime();
+                        u.PartSyncAt = syncDate.ToUniversalTime();
+                    });
+
+                    foreach (var role in Permission.Roles)
+                    {
+                        role.UpdateAt = syncDate.ToUniversalTime();
+                        role.PartSyncAt = syncDate.ToUniversalTime();
+                    }
                 }
             }
 
@@ -181,6 +196,18 @@ namespace UserStorrage6.Services.Brockers
                     curPermissions.Status = Status.Delete;
                     curPermissions.SyncAt = currentdate.ToUniversalTime();
                     curPermissions.UpdateAt = syncTime.ToUniversalTime();
+
+                    curPermissions.Users?.ForEach(u =>
+                    {
+                        u.UpdateAt = syncTime.ToUniversalTime();
+                        u.PartSyncAt = syncTime.ToUniversalTime();
+                    });
+
+                    foreach (var role in curPermissions.Roles)
+                    {
+                        role.UpdateAt = syncTime.ToUniversalTime();
+                        role.PartSyncAt = syncTime.ToUniversalTime();
+                    }
                 }
             }
         }

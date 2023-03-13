@@ -74,8 +74,14 @@ namespace UserStorrage6.Services.Brockers
                     (role != null || role.Status != Status.Delete))
                 {
                     role.Status = Status.Delete;
-                    role.SyncAt = syncDate.ToUniversalTime();
+                    role.SyncAt = DateTime.Now.ToUniversalTime();
                     role.UpdateAt = syncDate.ToUniversalTime();
+
+                    role.Users?.ForEach(u =>
+                    {
+                        u.UpdateAt = syncDate.ToUniversalTime();
+                        u.PartSyncAt = syncDate.ToUniversalTime();
+                    });
                 }
             }
 
@@ -159,7 +165,10 @@ namespace UserStorrage6.Services.Brockers
             role.Comment = roleShort.Comment;
 
             role.Users?.ForEach(u =>
-                u.UpdateAt = currentDate.ToUniversalTime());
+            {
+                u.UpdateAt = syncTime.ToUniversalTime();
+                u.PartSyncAt = syncTime.ToUniversalTime();
+            });
 
             return role;
         }
@@ -197,6 +206,13 @@ namespace UserStorrage6.Services.Brockers
                     curRoles.Status = Status.Delete;
                     curRoles.SyncAt = currentdate.ToUniversalTime();
                     curRoles.UpdateAt = syncTime.ToUniversalTime();
+                    curRoles.PartSyncAt = syncTime.ToUniversalTime();
+
+                    curRoles.Users?.ForEach(u =>
+                    {
+                        u.UpdateAt = syncTime.ToUniversalTime();
+                        u.PartSyncAt = syncTime.ToUniversalTime();
+                    });
                 }
             }
         }
