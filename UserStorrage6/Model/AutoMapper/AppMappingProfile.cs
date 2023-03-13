@@ -47,6 +47,7 @@ namespace UserStorrage6.Model.AutoMapper
             CreateMap<RoleShort, Role>()
                 .ForMember(x => x.Users, opt => opt.Ignore())
                 .ForMember(x => x.Id, opt => opt.Ignore())
+                .ForMember(x => x.Permissions, opt => opt.Ignore())
                 .ForMember(x => x.Service, opt => opt.Ignore());
             CreateMap<Role, RoleShort>();
 
