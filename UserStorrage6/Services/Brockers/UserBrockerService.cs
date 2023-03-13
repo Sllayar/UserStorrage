@@ -74,8 +74,7 @@ namespace UserStorrage6.Services.Brockers
 
             await dataBrocker.SaveChangesAsync();
 
-            return currentService?.Users?.Where(u =>
-                u.UpdateAt == syncDate.ToUniversalTime() && u.Status == Status.Delete).ToList(); ;
+            return currentService?.Users?.ToList(); ;
         }
 
         public async Task<List<User>?> Sinhronize(
@@ -229,6 +228,7 @@ namespace UserStorrage6.Services.Brockers
                 var newPermission = permissions.FirstOrDefault(p => p.SysId == permission);
 
                 if (newPermission == null) throw new Exception($"Несуществующий параметр {permission}");
+                if (user.Permissions.FirstOrDefault(p => p.SysId == newPermission.SysId) != null) continue;
                 else user.Permissions.Add(newPermission);
             }
         }
@@ -247,6 +247,7 @@ namespace UserStorrage6.Services.Brockers
                 var newRole = roles.FirstOrDefault(p => p.SysId == role);
 
                 if (newRole == null) throw new Exception($"Несуществующий параметр {role}");
+                if (user.Roles.FirstOrDefault(p => p.SysId == newRole.SysId) != null) continue;
                 else user.Roles.Add(newRole);
             }
         }

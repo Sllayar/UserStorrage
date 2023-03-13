@@ -52,7 +52,7 @@ namespace UserStorrage6.Controllers
 
         [HttpGet(Name = "Test/Users")]
         [ActionName("Test/Users")]
-        public List<User> GetUsers([FromHeader] string ServiceKey)
+        public List<User> GetUsers([FromQuery] string ServiceKey)
         {
             if (_testBrocker.Services.Count == 0) return new List<User>();
             if (string.IsNullOrEmpty(ServiceKey)) return _testBrocker.Services.FirstOrDefault().Users;
