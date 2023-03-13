@@ -137,7 +137,7 @@ namespace UserStorrage6.Services.Brockers
             Service service, List<Permission>? permissions, DateTime currentDate, DateTime syncTime)
         {
             role.SyncAt = currentDate.ToUniversalTime();
-            role.PartSyncAt = currentDate.ToUniversalTime();
+            role.PartSyncAt = syncTime.ToUniversalTime();
 
             if (role.Name == roleShort.Name &&
                 role.Description == roleShort.Description &&
@@ -175,7 +175,7 @@ namespace UserStorrage6.Services.Brockers
             role.UpdateAt = syncTime.ToUniversalTime();
             role.CreateAT = currentdate.ToUniversalTime();
             role.SyncAt = currentdate.ToUniversalTime();
-            role.PartSyncAt = currentdate.ToUniversalTime();
+            role.PartSyncAt = syncTime.ToUniversalTime();
 
             dataBrocker.AttachRole(role);
 
