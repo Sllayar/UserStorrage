@@ -138,8 +138,8 @@ namespace UserStorrage6.Services.Brockers
                 if (curUser == null && curUser.Status == Status.Delete) continue;
 
                 curUser.Status = Status.Delete;
-                curUser.SyncAt = syncTime.ToUniversalTime();
-                curUser.UpdateAt = currentdate.ToUniversalTime();
+                curUser.SyncAt = currentdate.ToUniversalTime();
+                curUser.UpdateAt = syncTime.ToUniversalTime();
                 curUser.PartSyncAt = syncTime.ToUniversalTime();
             }
         }
