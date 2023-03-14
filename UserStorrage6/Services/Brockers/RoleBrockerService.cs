@@ -145,11 +145,19 @@ namespace UserStorrage6.Services.Brockers
             role.SyncAt = currentDate.ToUniversalTime();
             role.PartSyncAt = syncTime.ToUniversalTime();
 
+            var delPermissions = role.Permissions.Select(s => s.SysId).Except(roleShort.Permissions).ToList();
+            var addPermissions = roleShort.Permissions.Except(role.Permissions.Select(p => p.SysId)).ToList();
+
+            foreach (var p in role.Permissions)
+
             if (role.Name == roleShort.Name &&
                 role.Description == roleShort.Description &&
                 role.Status == roleShort.Status &&
                 role.IsNeedAprove == roleShort.IsNeedAprove &&
-                role.Comment == roleShort.Comment)
+                role.Comment == roleShort.Comment &&
+                delPermissions.Count == 0 &&
+                addPermissions.Count == 0
+                )
                 return role;
 
             role.Service = service;
